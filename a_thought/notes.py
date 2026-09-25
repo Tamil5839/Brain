@@ -236,6 +236,30 @@ def main():
       "trials at 0 Hz in B and D) are broken by the total spike count closest to the mean, then the lowest seed. "
       "Chosen seeds: " + ", ".join(f"{k} → {conds[k]['representative_seed']}" for k in ("A_sugar", "B_bitter", "C_sugar_bitter", "D_baseline")) + ".\n")
 
+    # spikes by colour class (non-stimulated neurons), from the spike files
+    import numpy as np
+    import pandas as pd
+
+    nd = pd.read_parquet(ROOT / "data/processed/neurons.parquet")
+    cls = nd.color_class.to_numpy()
+    pos = {r: i for i, r in enumerate(nd.root_id)}
+    stim_ix = [pos[r] for r in exp["stimulus"]["sugar_root_ids"] + exp["stimulus"]["bitter_root_ids"]]
+    share = {}
+    w("Spikes per trial of non-stimulated neurons by colour class (mean of 30 trials):\n")
+    w("| condition | excitatory (amber) | inhibitory (cyan) | other (white) | inhibitory share |\n|---|---|---|---|---|")
+    for key in ("A_sugar", "B_bitter", "C_sugar_bitter"):
+        sp = np.load(ROOT / f"results/spikes/{key}.npz")
+        nn = sp["neurons"][~np.isin(sp["neurons"], stim_ix)]
+        cnt = pd.Series(cls[nn]).value_counts() / conds[key]["n_trials"]
+        e_, i_, o_ = cnt.get("excitatory", 0.0), cnt.get("inhibitory", 0.0), cnt.get("other", 0.0)
+        share[key] = (e_, i_, o_, i_ / max(e_ + i_ + o_, 1e-9))
+        w(f"| {key} | {e_:,.0f} | {i_:,.0f} | {o_:,.0f} | {100 * share[key][3]:.1f} % |")
+    a_, c_ = share["A_sugar"], share["C_sugar_bitter"]
+    w(f"\nThe brief expected inhibitory (cyan) activity to visibly rise in experiment C. In the simulation it does not rise "
+      f"in absolute terms: inhibitory spikes fall from {a_[1]:,.0f} to {c_[1]:,.0f} per trial, excitatory spikes fall more "
+      f"({a_[0]:,.0f} → {c_[0]:,.0f}), so inhibition's share of the activity rises from {100 * a_[3]:.1f} % to "
+      f"{100 * c_[3]:.1f} %. The film shows the spikes exactly as simulated and makes no on-screen claim about cyan "
+      "activity rising.\n")
     w("### Validation (section 5 of the brief) — rendering is blocked unless all pass\n")
     t = val["tests"]
     w(f"Overall: **{'ALL PASSED' if val['all_passed'] else 'FAILED'}** (`results/validation.json`, {val['created_utc']}).\n")
@@ -422,6 +446,10 @@ def main():
       "(13-tap downsample, tent upsample), ACES filmic tone curve (Narkowicz fit), gamma, background #030407, fine grain. "
       "Overlays (Inter) are composited in sRGB. Encoding: ffmpeg libx264, yuv420p, BT.709; the 1080p version is a "
       "Lanczos downscale of the master. `render/cpu.py` is a slow NumPy splatting fallback for previews without GL.\n")
+    w("QA: one defect appeared during development — a single non-finite pixel from the shell shader (`pow` of a "
+      "slightly negative base when |n·v| rounds above 1) that the bloom chain spread into a dark block. The shader now "
+      "clamps its input and the bloom and final passes discard non-finite values; `tests/qa_video.py --nan master 40` "
+      "re-renders 40 random frames at full resolution and confirms the HDR buffer is finite in every one.\n")
 
     w("## 9. Reproduce\n")
     w("```\npip install -r requirements.txt   # plus ffmpeg, Mesa EGL, fonts-inter\npython fetch.py\npython prepare.py\n"

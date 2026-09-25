@@ -10,7 +10,7 @@ On-screen wording used throughout: *"A simulation built on the real wiring of a 
 |---|---|---|
 | `out/a_thought.mp4` | master, ~2:36 | not rendered yet |
 | `out/a_thought_1080p.mp4` | 1080p version of the master | not rendered yet |
-| `out/a_thought_vertical.mp4` | vertical cut, ~60 s | not rendered yet |
+| `out/a_thought_vertical.mp4` | vertical cut, ~60 s | 1080×1920, 60/1 fps, 62.00 s, h264 High, yuv420p, 66 MB (8.5 Mb/s) |
 | `out/poster.png` | long exposure of all spikes | 3840×2160 PNG |
 
 ## 2. Data and code sources
@@ -133,6 +133,16 @@ Each condition: 30 trials of 1 s, seeds 0–29, Poisson input at 150 Hz per stim
 | D baseline | 0.0 ± 0.0 | 0.0 ± 0.0 | 0 | 0 | 0 |
 
 (mean ± s.d. over trials; MN9 sides from annotation v3.1.0.) **Representative trial**: for each condition the film shows the one trial whose MN9 rate (mean of the two MN9 neurons) is closest to the condition's mean; ties (all trials at 0 Hz in B and D) are broken by the total spike count closest to the mean, then the lowest seed. Chosen seeds: A_sugar → 29, B_bitter → 0, C_sugar_bitter → 15, D_baseline → 0.
+
+Spikes per trial of non-stimulated neurons by colour class (mean of 30 trials):
+
+| condition | excitatory (amber) | inhibitory (cyan) | other (white) | inhibitory share |
+|---|---|---|---|---|
+| A_sugar | 4,640 | 4,864 | 316 | 49.5 % |
+| B_bitter | 465 | 880 | 31 | 63.9 % |
+| C_sugar_bitter | 2,898 | 3,705 | 237 | 54.2 % |
+
+The brief expected inhibitory (cyan) activity to visibly rise in experiment C. In the simulation it does not rise in absolute terms: inhibitory spikes fall from 4,864 to 3,705 per trial, excitatory spikes fall more (4,640 → 2,898), so inhibition's share of the activity rises from 49.5 % to 54.2 %. The film shows the spikes exactly as simulated and makes no on-screen claim about cyan activity rising.
 
 ### Validation (section 5 of the brief) — rendering is blocked unless all pass
 
@@ -308,6 +318,8 @@ Deviation from the brief's timing: with the same 25× slow motion for all three 
 ## 8. Rendering
 
 moderngl (OpenGL 3.3 core) through a headless EGL context. This build machine has no GPU, so Mesa's llvmpipe rasterised on the CPU. Points and lines are drawn additively into a float32 HDR buffer; 4 sub-frames per output frame (180° shutter) are accumulated for motion blur; the brain shell once per frame. Post: 6-level bloom (13-tap downsample, tent upsample), ACES filmic tone curve (Narkowicz fit), gamma, background #030407, fine grain. Overlays (Inter) are composited in sRGB. Encoding: ffmpeg libx264, yuv420p, BT.709; the 1080p version is a Lanczos downscale of the master. `render/cpu.py` is a slow NumPy splatting fallback for previews without GL.
+
+QA: one defect appeared during development — a single non-finite pixel from the shell shader (`pow` of a slightly negative base when |n·v| rounds above 1) that the bloom chain spread into a dark block. The shader now clamps its input and the bloom and final passes discard non-finite values; `tests/qa_video.py --nan master 40` re-renders 40 random frames at full resolution and confirms the HDR buffer is finite in every one.
 
 ## 9. Reproduce
 

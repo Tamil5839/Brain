@@ -9,3 +9,5 @@ a_thought/data/processed/
 # render outputs (final deliverables are copied/linked explicitly)
 a_thought/out/*
 !a_thought/out/poster.png
+!a_thought/out/a_thought_vertical.mp4
+!a_thought/out/a_thought_1080p.mp4

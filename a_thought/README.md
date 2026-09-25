@@ -29,7 +29,8 @@ validation results and every visual-aid disclosure.
 
 Rendering refuses to start unless `results/validation.json` reports that every test passed.
 The Brian2 reference runs (`sim/brian2_reference.py`, `tests/brian2_*equivalence.py`) need
-the authors' environment: Brian2 2.5.1 with NumPy 1.24 (a separate virtual environment).
+the authors' environment: Brian2 2.5.1 with NumPy 1.24 in a separate virtual environment
+(`requirements-brian2.txt` has the pinned versions and install steps).
 
 Requirements: Python 3.11, `requirements.txt`, ffmpeg, Mesa EGL (`libegl1`, `libegl-mesa0`)
 and the Inter font (`fonts-inter`). A GPU is used if present; without one, Mesa's llvmpipe

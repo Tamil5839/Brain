@@ -769,13 +769,18 @@ def render_film(fmt_name: str, start: float | None = None, end: float | None = N
     return out
 
 
-def downscale_1080p(src: Path = OUT / "a_thought.mp4", dst: Path = OUT / "a_thought_1080p.mp4"):
-    """1080p version of the master: Lanczos downscale, same colour tags."""
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src),
-                    "-vf", "scale=1920:1080:flags=lanczos+accurate_rnd:in_color_matrix=bt709:out_color_matrix=bt709",
-                    "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-profile:v", "high", "-pix_fmt", "yuv420p",
-                    "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
-                    "-g", "120", "-movflags", "+faststart", str(dst)], check=True)
+def downscale_1080p(src: Path = OUT / "a_thought.mp4", dst: Path = OUT / "a_thought_1080p.mp4", mbit: float = 4.6):
+    """1080p version of the master: Lanczos downscale, two-pass H.264 at ~4.6 Mb/s so the file
+    stays under GitHub's 100 MB limit (about 90 MB for 2:36)."""
+    common = ["-vf", "scale=1920:1080:flags=lanczos+accurate_rnd:in_color_matrix=bt709:out_color_matrix=bt709",
+              "-c:v", "libx264", "-preset", "slow", "-b:v", f"{mbit}M", "-maxrate", f"{2 * mbit}M", "-bufsize", f"{4 * mbit}M",
+              "-profile:v", "high", "-pix_fmt", "yuv420p", "-colorspace", "bt709", "-color_primaries", "bt709",
+              "-color_trc", "bt709", "-color_range", "tv", "-g", "120"]
+    log_prefix = str(OUT / "x264_2pass")
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), *common, "-pass", "1", "-passlogfile", log_prefix,
+                    "-an", "-f", "mp4", "/dev/null"], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src), *common, "-pass", "2", "-passlogfile", log_prefix,
+                    "-movflags", "+faststart", str(dst)], check=True)
     log(f"wrote {dst}")
     return dst
 

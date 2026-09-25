@@ -1,0 +1,12 @@
+# Reference environment for the authors' Brian2 code (sim/brian2_reference.py, tests/brian2_*equivalence.py).
+# Brian2 2.5.1 / NumPy 1.24 as in the authors' environment.yml. Install into a separate venv:
+#   python -m venv .venv-brian2 && .venv-brian2/bin/pip install numpy==1.24.4 'cython<3' 'setuptools<70' wheel
+#   .venv-brian2/bin/pip install --no-build-isolation -r a_thought/requirements-brian2.txt
+Brian2==2.5.1
+Cython==0.29.37
+joblib==1.6.0
+numpy==1.24.4
+pandas==2.1.4
+pyarrow==15.0.2
+scipy==1.11.4
+sympy==1.12.1

@@ -114,6 +114,7 @@ class Trial:
     dt: float
     n_steps: int
     seed: int | None
+    v_trace: np.ndarray | None = None  # (steps, probed neurons) membrane potential in mV, if requested
 
     @property
     def times_ms(self) -> np.ndarray:
@@ -255,9 +256,7 @@ def simulate(
         steps, neurons = np.concatenate(out_steps), np.concatenate(out_neurons)
     else:
         steps, neurons = np.empty(0, np.int32), np.empty(0, np.int32)
-    trial = Trial(steps=steps, neurons=neurons, dt=dt, n_steps=n_steps, seed=seed)
-    trial.v_trace = trace
-    return trial
+    return Trial(steps=steps, neurons=neurons, dt=dt, n_steps=n_steps, seed=seed, v_trace=trace)
 
 
 def rates_hz(trial: Trial, n: int) -> np.ndarray:
