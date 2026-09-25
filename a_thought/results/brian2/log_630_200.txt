@@ -1,0 +1,22 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/user/Brain/a_thought/sim/brian2_reference.py", line 18, in <module>
+    import model as shiu  # noqa: E402  (the authors' model.py, downloaded by fetch.py)
+    ^^^^^^^^^^^^^^^^^^^^
+  File "/home/user/Brain/a_thought/data/raw/shiu_model/model.py", line 5, in <module>
+    from brian2 import NeuronGroup, Synapses, PoissonInput, SpikeMonitor, Network
+  File "/home/user/Brain/.venv/lib/python3.11/site-packages/brian2/__init__.py", line 58, in <module>
+    import brian2.numpy_ as numpy
+  File "/home/user/Brain/.venv/lib/python3.11/site-packages/brian2/numpy_.py", line 12, in <module>
+    from brian2.units.unitsafefunctions import *
+  File "/home/user/Brain/.venv/lib/python3.11/site-packages/brian2/units/__init__.py", line 7, in <module>
+    from .allunits import (
+  File "/home/user/Brain/.venv/lib/python3.11/site-packages/brian2/units/allunits.py", line 14, in <module>
+    from .fundamentalunits import (
+  File "/home/user/Brain/.venv/lib/python3.11/site-packages/brian2/units/fundamentalunits.py", line 984, in <module>
+    class Quantity(np.ndarray):
+  File "/home/user/Brain/.venv/lib/python3.11/site-packages/brian2/units/fundamentalunits.py", line 1661, in Quantity
+    ptp = wrap_function_keep_dimensions(np.ndarray.ptp)
+                                        ^^^^^^^^^^^^^^
+AttributeError: type object 'numpy.ndarray' has no attribute 'ptp'

@@ -1,0 +1,502 @@
+{
+  "created_utc": "2026-09-25T13:35:47+00:00",
+  "condition": "A_sugar",
+  "trial": 29,
+  "seed": 29,
+  "rule": {
+    "K1": 8,
+    "K2": 8,
+    "K0": 6,
+    "min_syn_arc": 5,
+    "score": "spikes in the trial x excitatory synapses onto the next level"
+  },
+  "neurons": [
+    {
+      "index": 127176,
+      "root_id": 720575940639198653,
+      "level": 0,
+      "spikes": 153,
+      "cell_type": "LB3",
+      "cell_class": "gustatory",
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 111878,
+      "root_id": 720575940633143833,
+      "level": 0,
+      "spikes": 160,
+      "cell_type": "LB3",
+      "cell_class": "gustatory",
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 108940,
+      "root_id": 720575940632425919,
+      "level": 0,
+      "spikes": 129,
+      "cell_type": "LB3",
+      "cell_class": "gustatory",
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 91007,
+      "root_id": 720575940628853239,
+      "level": 0,
+      "spikes": 149,
+      "cell_type": "LB3",
+      "cell_class": "gustatory",
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 12549,
+      "root_id": 720575940611875570,
+      "level": 0,
+      "spikes": 147,
+      "cell_type": "LB3",
+      "cell_class": "gustatory",
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 28959,
+      "root_id": 720575940616885538,
+      "level": 0,
+      "spikes": 153,
+      "cell_type": "LB3",
+      "cell_class": "gustatory",
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 64261,
+      "root_id": 720575940624023188,
+      "level": 1,
+      "spikes": 23,
+      "cell_type": "CB0824",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 38066,
+      "root_id": 720575940619114048,
+      "level": 1,
+      "spikes": 23,
+      "cell_type": "CB0824",
+      "cell_class": null,
+      "side": "right",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 46186,
+      "root_id": 720575940620874757,
+      "level": 1,
+      "spikes": 88,
+      "cell_type": "CB0616",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 108582,
+      "root_id": 720575940632365905,
+      "level": 1,
+      "spikes": 27,
+      "cell_type": "CB0051",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 78991,
+      "root_id": 720575940626835146,
+      "level": 1,
+      "spikes": 71,
+      "cell_type": "CB0277",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 99818,
+      "root_id": 720575940630579574,
+      "level": 1,
+      "spikes": 54,
+      "cell_type": "CB0177",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 40999,
+      "root_id": 720575940619877396,
+      "level": 1,
+      "spikes": 72,
+      "cell_type": "DNge059",
+      "cell_class": null,
+      "side": "right",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 91644,
+      "root_id": 720575940628972048,
+      "level": 1,
+      "spikes": 41,
+      "cell_type": "CB0542",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 4493,
+      "root_id": 720575940607272649,
+      "level": 2,
+      "spikes": 57,
+      "cell_type": "CB0553",
+      "cell_class": null,
+      "side": "right",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 59741,
+      "root_id": 720575940623211725,
+      "level": 2,
+      "spikes": 53,
+      "cell_type": "CB0553",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 80663,
+      "root_id": 720575940627099338,
+      "level": 2,
+      "spikes": 33,
+      "cell_type": "DNge062",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 108075,
+      "root_id": 720575940632252743,
+      "level": 2,
+      "spikes": 56,
+      "cell_type": "CB0493",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 48407,
+      "root_id": 720575940621261296,
+      "level": 2,
+      "spikes": 29,
+      "cell_type": "CB0493",
+      "cell_class": null,
+      "side": "right",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 7448,
+      "root_id": 720575940609407939,
+      "level": 2,
+      "spikes": 41,
+      "cell_type": "DNge080",
+      "cell_class": null,
+      "side": "right",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 85148,
+      "root_id": 720575940627847752,
+      "level": 2,
+      "spikes": 40,
+      "cell_type": "DNge080",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 24709,
+      "root_id": 720575940615671106,
+      "level": 2,
+      "spikes": 77,
+      "cell_type": "DNge059",
+      "cell_class": null,
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 34421,
+      "root_id": 720575940618238523,
+      "level": 3,
+      "spikes": 55,
+      "cell_type": "CB0701",
+      "cell_class": "brain_motor_neuron",
+      "side": "left",
+      "color_class": "excitatory"
+    },
+    {
+      "index": 138954,
+      "root_id": 720575940660219265,
+      "level": 3,
+      "spikes": 82,
+      "cell_type": "CB0701",
+      "cell_class": "brain_motor_neuron",
+      "side": "right",
+      "color_class": "excitatory"
+    }
+  ],
+  "arcs": [
+    {
+      "pre": 80663,
+      "post": 138954,
+      "synapses": 561
+    },
+    {
+      "pre": 4493,
+      "post": 34421,
+      "synapses": 472
+    },
+    {
+      "pre": 59741,
+      "post": 138954,
+      "synapses": 424
+    },
+    {
+      "pre": 48407,
+      "post": 34421,
+      "synapses": 321
+    },
+    {
+      "pre": 64261,
+      "post": 59741,
+      "synapses": 290
+    },
+    {
+      "pre": 108075,
+      "post": 138954,
+      "synapses": 281
+    },
+    {
+      "pre": 38066,
+      "post": 4493,
+      "synapses": 260
+    },
+    {
+      "pre": 108582,
+      "post": 59741,
+      "synapses": 174
+    },
+    {
+      "pre": 108582,
+      "post": 108075,
+      "synapses": 137
+    },
+    {
+      "pre": 64261,
+      "post": 24709,
+      "synapses": 123
+    },
+    {
+      "pre": 64261,
+      "post": 85148,
+      "synapses": 113
+    },
+    {
+      "pre": 99818,
+      "post": 4493,
+      "synapses": 99
+    },
+    {
+      "pre": 38066,
+      "post": 7448,
+      "synapses": 95
+    },
+    {
+      "pre": 127176,
+      "post": 46186,
+      "synapses": 91
+    },
+    {
+      "pre": 7448,
+      "post": 138954,
+      "synapses": 88
+    },
+    {
+      "pre": 7448,
+      "post": 34421,
+      "synapses": 85
+    },
+    {
+      "pre": 40999,
+      "post": 4493,
+      "synapses": 82
+    },
+    {
+      "pre": 85148,
+      "post": 34421,
+      "synapses": 79
+    },
+    {
+      "pre": 85148,
+      "post": 138954,
+      "synapses": 70
+    },
+    {
+      "pre": 91644,
+      "post": 7448,
+      "synapses": 67
+    },
+    {
+      "pre": 91644,
+      "post": 85148,
+      "synapses": 66
+    },
+    {
+      "pre": 38066,
+      "post": 24709,
+      "synapses": 64
+    },
+    {
+      "pre": 78991,
+      "post": 4493,
+      "synapses": 59
+    },
+    {
+      "pre": 24709,
+      "post": 34421,
+      "synapses": 51
+    },
+    {
+      "pre": 46186,
+      "post": 85148,
+      "synapses": 50
+    },
+    {
+      "pre": 108940,
+      "post": 46186,
+      "synapses": 42
+    },
+    {
+      "pre": 111878,
+      "post": 46186,
+      "synapses": 41
+    },
+    {
+      "pre": 78991,
+      "post": 7448,
+      "synapses": 40
+    },
+    {
+      "pre": 46186,
+      "post": 59741,
+      "synapses": 33
+    },
+    {
+      "pre": 99818,
+      "post": 59741,
+      "synapses": 31
+    },
+    {
+      "pre": 40999,
+      "post": 138954,
+      "synapses": 31
+    },
+    {
+      "pre": 64261,
+      "post": 80663,
+      "synapses": 29
+    },
+    {
+      "pre": 64261,
+      "post": 108075,
+      "synapses": 26
+    },
+    {
+      "pre": 38066,
+      "post": 48407,
+      "synapses": 24
+    },
+    {
+      "pre": 12549,
+      "post": 46186,
+      "synapses": 21
+    },
+    {
+      "pre": 38066,
+      "post": 138954,
+      "synapses": 20
+    },
+    {
+      "pre": 46186,
+      "post": 24709,
+      "synapses": 18
+    },
+    {
+      "pre": 91007,
+      "post": 46186,
+      "synapses": 17
+    },
+    {
+      "pre": 78991,
+      "post": 59741,
+      "synapses": 16
+    },
+    {
+      "pre": 91644,
+      "post": 24709,
+      "synapses": 12
+    },
+    {
+      "pre": 80663,
+      "post": 34421,
+      "synapses": 11
+    },
+    {
+      "pre": 48407,
+      "post": 138954,
+      "synapses": 11
+    },
+    {
+      "pre": 28959,
+      "post": 46186,
+      "synapses": 10
+    },
+    {
+      "pre": 108075,
+      "post": 34421,
+      "synapses": 10
+    },
+    {
+      "pre": 91644,
+      "post": 80663,
+      "synapses": 9
+    },
+    {
+      "pre": 64261,
+      "post": 34421,
+      "synapses": 7
+    },
+    {
+      "pre": 46186,
+      "post": 7448,
+      "synapses": 7
+    },
+    {
+      "pre": 91007,
+      "post": 78991,
+      "synapses": 5
+    },
+    {
+      "pre": 40999,
+      "post": 24709,
+      "synapses": 5
+    }
+  ]
+}

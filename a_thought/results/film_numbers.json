@@ -1,0 +1,59 @@
+{
+  "neurons": 139262,
+  "connections": 15091983,
+  "synapses": 54492922,
+  "sugar_n": 20,
+  "bitter_n": 20,
+  "rate_hz": 150.0,
+  "trials_per_condition": 30,
+  "mn9_sides": [
+    "left",
+    "right"
+  ],
+  "A_sugar": {
+    "representative_seed": 29,
+    "mn9_spikes_trial": [
+      55,
+      82
+    ],
+    "mn9_rate_mean_30": [
+      57.4,
+      79.7
+    ],
+    "spikes_trial": 12754,
+    "active_neurons_trial": 364
+  },
+  "B_bitter": {
+    "representative_seed": 0,
+    "mn9_spikes_trial": [
+      0,
+      0
+    ],
+    "mn9_rate_mean_30": [
+      0.0,
+      0.0
+    ],
+    "spikes_trial": 4328,
+    "active_neurons_trial": 71
+  },
+  "C_sugar_bitter": {
+    "representative_seed": 15,
+    "mn9_spikes_trial": [
+      15,
+      5
+    ],
+    "mn9_rate_mean_30": [
+      14.133333333333333,
+      5.466666666666667
+    ],
+    "spikes_trial": 12798,
+    "active_neurons_trial": 335
+  },
+  "sources": {
+    "neurons": "results/prepare_log.json neurons.simulated_total",
+    "connections": "results/prepare_log.json connectivity.connections",
+    "mn9_spikes_trial": "results/spikes/<condition>.npz, representative trial (experiments.json)",
+    "mn9_rate_mean_30": "results/experiments.json conditions.<condition>.mn9_rate_hz_mean",
+    "spikes_trial": "results/spikes/<condition>.npz, representative trial"
+  }
+}

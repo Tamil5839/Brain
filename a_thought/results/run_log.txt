@@ -1,0 +1,4 @@
+  A_sugar         MN9 L/R [57.4 79.7] Hz (sd [3.7 3.6]), 12775 spikes/trial, representative trial seed 29 (124 s)
+  B_bitter        MN9 L/R [0. 0.] Hz (sd [0. 0.]), 4330 spikes/trial, representative trial seed 0 (114 s)
+  C_sugar_bitter  MN9 L/R [14.1  5.5] Hz (sd [2.1 3. ]), 12750 spikes/trial, representative trial seed 15 (125 s)
+  D_baseline      MN9 L/R [0. 0.] Hz (sd [0. 0.]), 0 spikes/trial, representative trial seed 0 (101 s)

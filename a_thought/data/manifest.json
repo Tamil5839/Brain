@@ -1,0 +1,541 @@
+{
+  "description": "Raw inputs for A THOUGHT. Paths are relative to a_thought/. Re-create with `python fetch.py`.",
+  "flywire_release": "783 (FlyWire public release; materialization 783)",
+  "files": {
+    "flywire_annotations": {
+      "url": "https://raw.githubusercontent.com/flyconnectome/flywire_annotations/8587524c1748ce5ef2080822a2fc890fc03bf597/supplemental_files/Supplemental_file1_neuron_annotations.tsv",
+      "dest": "flywire_annotations_v3.1.0/Supplemental_file1_neuron_annotations.tsv",
+      "version": "flyconnectome/flywire_annotations tag v3.1.0, commit 8587524c1748ce5ef2080822a2fc890fc03bf597; FlyWire materialization 783",
+      "role": "neuron annotations: cell classes/types, side, predicted top_nt, soma and anchor positions (4x4x40 nm voxels)",
+      "license": "FlyWire release 783 data. Citation required: Dorkenwald et al. 2024 (Nature 634:124-138) and Schlegel et al. 2024 (Nature 634:139-152); annotation versions >= 3.0.0 also ask for Berg et al. 2025 (bioRxiv 10.1101/2025.10.09.680999) and Matsliah et al. 2024 (Nature). The flywire_annotations repository has no LICENSE file; its README 'How to cite' section is the stated requirement. flypoke's README states 'FlyWire data are released under CC BY 4.0'; the primary licence pages (zenodo.org record 10676866, flywire.ai, codex.flywire.ai) returned HTTP 403 from this build environment's egress proxy, so the exact licence wording is UNVERIFIED here and must be confirmed before public release.",
+      "path": "data/raw/flywire_annotations_v3.1.0/Supplemental_file1_neuron_annotations.tsv",
+      "size_bytes": 31718505,
+      "sha256": "9a4f8b2f843196074431ebd7cd883536afa1be86c8a4ce90970441e8be81d1be",
+      "retrieved_utc": "2026-09-25T13:04:18+00:00"
+    },
+    "flywire_annotations_paper_version": {
+      "url": "https://raw.githubusercontent.com/flyconnectome/flywire_annotations/ebd66db2596fcc39c6950fb54ea3efa00f7fe8a0/supplemental_files/Supplemental_file1_neuron_annotations.tsv",
+      "dest": "flywire_annotations_v2.1.0/Supplemental_file1_neuron_annotations.tsv",
+      "version": "flyconnectome/flywire_annotations tag v2.1.0, commit ebd66db2596fcc39c6950fb54ea3efa00f7fe8a0 (version reported in Schlegel et al. 2024)",
+      "role": "reference only: stimulus-group counts compared against v3.1.0 in NOTES.md",
+      "license": "FlyWire release 783 data. Citation required: Dorkenwald et al. 2024 (Nature 634:124-138) and Schlegel et al. 2024 (Nature 634:139-152); annotation versions >= 3.0.0 also ask for Berg et al. 2025 (bioRxiv 10.1101/2025.10.09.680999) and Matsliah et al. 2024 (Nature). The flywire_annotations repository has no LICENSE file; its README 'How to cite' section is the stated requirement. flypoke's README states 'FlyWire data are released under CC BY 4.0'; the primary licence pages (zenodo.org record 10676866, flywire.ai, codex.flywire.ai) returned HTTP 403 from this build environment's egress proxy, so the exact licence wording is UNVERIFIED here and must be confirmed before public release.",
+      "path": "data/raw/flywire_annotations_v2.1.0/Supplemental_file1_neuron_annotations.tsv",
+      "size_bytes": 27015208,
+      "sha256": "30be6c73975a70c56d930e27911f36455d3886e15abf383b78edd2a5d679e0b6",
+      "retrieved_utc": "2026-09-25T13:04:21+00:00"
+    },
+    "shiu_connectivity_783": {
+      "url": "https://raw.githubusercontent.com/philshiu/Drosophila_brain_model/91bdd1e7dcf193f3e7ca5a8933497fcef63b7960/Connectivity_783.parquet",
+      "dest": "shiu_model/Connectivity_783.parquet",
+      "version": "philshiu/Drosophila_brain_model commit 91bdd1e7dcf193f3e7ca5a8933497fcef63b7960; built by the authors from FlyWire public release 783",
+      "role": "connection table used by the simulation: presynaptic/postsynaptic root ids, synapse count, sign (Excitatory)",
+      "license": "Repository: MIT License (c) 2023 Philip Shiu and Nico Spiller. Underlying data: FlyWire release 783 data. Citation required: Dorkenwald et al. 2024 (Nature 634:124-138) and Schlegel et al. 2024 (Nature 634:139-152); annotation versions >= 3.0.0 also ask for Berg et al. 2025 (bioRxiv 10.1101/2025.10.09.680999) and Matsliah et al. 2024 (Nature). The flywire_annotations repository has no LICENSE file; its README 'How to cite' section is the stated requirement. flypoke's README states 'FlyWire data are released under CC BY 4.0'; the primary licence pages (zenodo.org record 10676866, flywire.ai, codex.flywire.ai) returned HTTP 403 from this build environment's egress proxy, so the exact licence wording is UNVERIFIED here and must be confirmed before public release.",
+      "path": "data/raw/shiu_model/Connectivity_783.parquet",
+      "size_bytes": 100804642,
+      "sha256": "efeb23fb99098e9c390f6869969b2a121a2ee92c833cfc45ecb2c1d8e1af0347",
+      "retrieved_utc": "2026-09-25T13:04:24+00:00"
+    },
+    "shiu_completeness_783": {
+      "url": "https://raw.githubusercontent.com/philshiu/Drosophila_brain_model/91bdd1e7dcf193f3e7ca5a8933497fcef63b7960/Completeness_783.csv",
+      "dest": "shiu_model/Completeness_783.csv",
+      "version": "philshiu/Drosophila_brain_model commit 91bdd1e7dcf193f3e7ca5a8933497fcef63b7960",
+      "role": "neuron list of the authors' v783 model (index order of Connectivity_783.parquet)",
+      "license": "MIT (repository); FlyWire terms for the data",
+      "path": "data/raw/shiu_model/Completeness_783.csv",
+      "size_bytes": 3327347,
+      "sha256": "bbb847a4cc2caaa7a16349722d220c087317b946d148d4d592d94d250617a311",
+      "retrieved_utc": "2026-09-25T13:04:25+00:00"
+    },
+    "shiu_model_py": {
+      "url": "https://raw.githubusercontent.com/philshiu/Drosophila_brain_model/91bdd1e7dcf193f3e7ca5a8933497fcef63b7960/model.py",
+      "dest": "shiu_model/model.py",
+      "version": "philshiu/Drosophila_brain_model commit 91bdd1e7dcf193f3e7ca5a8933497fcef63b7960",
+      "role": "reference Brian2 implementation; all model parameters are taken from default_params in this file",
+      "license": "MIT License (c) 2023 Philip Shiu and Nico Spiller",
+      "path": "data/raw/shiu_model/model.py",
+      "size_bytes": 11900,
+      "sha256": "fc45837d7122c6ce2a7f3f2f23c515992e4b232aadb919efabb72337fac88e4e",
+      "retrieved_utc": "2026-09-25T13:04:25+00:00"
+    },
+    "shiu_connectivity_630": {
+      "url": "https://raw.githubusercontent.com/philshiu/Drosophila_brain_model/91bdd1e7dcf193f3e7ca5a8933497fcef63b7960/2023_03_23_connectivity_630_final.parquet",
+      "dest": "shiu_model/2023_03_23_connectivity_630_final.parquet",
+      "version": "philshiu/Drosophila_brain_model commit 91bdd1e7dcf193f3e7ca5a8933497fcef63b7960; FlyWire snapshot 630 (the version used in the paper)",
+      "role": "validation only: reproduce the authors' published example outputs",
+      "license": "MIT (repository); FlyWire terms for the data",
+      "path": "data/raw/shiu_model/2023_03_23_connectivity_630_final.parquet",
+      "size_bytes": 86630944,
+      "sha256": "94db8c650533bc36ffa3223f2e62325d5648b8d6bd31c3a4e1c804628c7557b3",
+      "retrieved_utc": "2026-09-25T13:04:28+00:00"
+    },
+    "shiu_completeness_630": {
+      "url": "https://raw.githubusercontent.com/philshiu/Drosophila_brain_model/91bdd1e7dcf193f3e7ca5a8933497fcef63b7960/2023_03_23_completeness_630_final.csv",
+      "dest": "shiu_model/2023_03_23_completeness_630_final.csv",
+      "version": "philshiu/Drosophila_brain_model commit 91bdd1e7dcf193f3e7ca5a8933497fcef63b7960",
+      "role": "validation only",
+      "license": "MIT (repository); FlyWire terms for the data",
+      "path": "data/raw/shiu_model/2023_03_23_completeness_630_final.csv",
+      "size_bytes": 3057611,
+      "sha256": "e6b71e17671a9bdb05f55e4bc6774640a1418cb7a05125e0fc994ad40f9bfdfb",
+      "retrieved_utc": "2026-09-25T13:04:28+00:00"
+    },
+    "shiu_example_sugarR": {
+      "url": "https://raw.githubusercontent.com/philshiu/Drosophila_brain_model/91bdd1e7dcf193f3e7ca5a8933497fcef63b7960/results/example/sugarR.parquet",
+      "dest": "shiu_model/results_example/sugarR.parquet",
+      "version": "philshiu/Drosophila_brain_model commit 91bdd1e7dcf193f3e7ca5a8933497fcef63b7960",
+      "role": "published reference output (authors' Brian2 run, v630, 21 right sugar GRNs, 30 trials)",
+      "license": "MIT (repository)",
+      "path": "data/raw/shiu_model/results_example/sugarR.parquet",
+      "size_bytes": 948526,
+      "sha256": "83921d50089d966785e402d6c0e3be5ab3eba5beb680410a09c557b0f22dcc28",
+      "retrieved_utc": "2026-09-25T13:04:29+00:00"
+    },
+    "shiu_example_sugarR_100Hz": {
+      "url": "https://raw.githubusercontent.com/philshiu/Drosophila_brain_model/91bdd1e7dcf193f3e7ca5a8933497fcef63b7960/results/example/sugarR_100Hz.parquet",
+      "dest": "shiu_model/results_example/sugarR_100Hz.parquet",
+      "version": "philshiu/Drosophila_brain_model commit 91bdd1e7dcf193f3e7ca5a8933497fcef63b7960",
+      "role": "published reference output (authors' Brian2 run, v630, 21 right sugar GRNs at 100 Hz, 30 trials)",
+      "license": "MIT (repository)",
+      "path": "data/raw/shiu_model/results_example/sugarR_100Hz.parquet",
+      "size_bytes": 557849,
+      "sha256": "93722ec03c3faa5a85790d77ed16bdd7f1e38a7c847ed0bc3af3dc2e4d0c3d34",
+      "retrieved_utc": "2026-09-25T13:04:29+00:00"
+    },
+    "flypoke_sim": {
+      "url": "https://raw.githubusercontent.com/vshapenko/flypoke/24814fe83224ca2d25c116c1107440b877b07762/src/flypoke/sim.py",
+      "dest": "flypoke/flypoke/sim.py",
+      "version": "vshapenko/flypoke commit 24814fe83224ca2d25c116c1107440b877b07762",
+      "role": "independent NumPy reimplementation used as a cross-check",
+      "license": "MIT License (c) 2026 vshapenko",
+      "path": "data/raw/flypoke/flypoke/sim.py",
+      "size_bytes": 6219,
+      "sha256": "b7c014088abb7a7541366fbcdecdc1e0f32baefdc7d80afafd73366d3b78f934",
+      "retrieved_utc": "2026-09-25T13:04:30+00:00"
+    },
+    "flypoke_data": {
+      "url": "https://raw.githubusercontent.com/vshapenko/flypoke/24814fe83224ca2d25c116c1107440b877b07762/src/flypoke/data.py",
+      "dest": "flypoke/flypoke/data.py",
+      "version": "vshapenko/flypoke commit 24814fe83224ca2d25c116c1107440b877b07762",
+      "role": "flypoke network construction (min 5 synapses, top_nt signs)",
+      "license": "MIT License (c) 2026 vshapenko",
+      "path": "data/raw/flypoke/flypoke/data.py",
+      "size_bytes": 6128,
+      "sha256": "bd938f32a722178677656c0536ac710b859349f19a1556eda34872172f2b53c3",
+      "retrieved_utc": "2026-09-25T13:04:30+00:00"
+    },
+    "flypoke_init": {
+      "url": "https://raw.githubusercontent.com/vshapenko/flypoke/24814fe83224ca2d25c116c1107440b877b07762/src/flypoke/__init__.py",
+      "dest": "flypoke/flypoke/__init__.py",
+      "version": "vshapenko/flypoke commit 24814fe83224ca2d25c116c1107440b877b07762",
+      "role": "package marker",
+      "license": "MIT License (c) 2026 vshapenko",
+      "path": "data/raw/flypoke/flypoke/__init__.py",
+      "size_bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "retrieved_utc": "2026-09-25T13:04:31+00:00"
+    },
+    "flypoke_readme": {
+      "url": "https://raw.githubusercontent.com/vshapenko/flypoke/24814fe83224ca2d25c116c1107440b877b07762/README.md",
+      "dest": "flypoke/README.md",
+      "version": "vshapenko/flypoke commit 24814fe83224ca2d25c116c1107440b877b07762",
+      "role": "flypoke's published feeding results table (compared in validation)",
+      "license": "MIT License (c) 2026 vshapenko",
+      "path": "data/raw/flypoke/README.md",
+      "size_bytes": 7417,
+      "sha256": "0b86c36afe42a125f48f7f9b6cc4b45fd37de7970e41f66297290c977f4de26c",
+      "retrieved_utc": "2026-09-25T13:04:31+00:00"
+    },
+    "flybrains_wheel": {
+      "url": "https://files.pythonhosted.org/packages/12/aa/10522349cba5ec65b8827cd7f4f189cb3cebd912d58c19db7f74f1e64b0f/flybrains-0.6.3-py3-none-any.whl",
+      "dest": "flybrains/flybrains-0.6.3-py3-none-any.whl",
+      "version": "navis-flybrains 0.6.3 (PyPI wheel)",
+      "role": "brain surface mesh in FlyWire space (nm): FLYWIRE_whole_brain.ply = outer brain shell incl. optic lobes",
+      "license": "flybrains is GNU GPL v3. The FLYWIRE neuropil mesh is the FAFB14 mesh transformed into FlyWire space (flybrains docstring); cite Zheng et al. 2018 (Cell), Dorkenwald et al. 2022 (Nat Methods) and navis-flybrains (github.com/navis-org/navis-flybrains).",
+      "path": "data/raw/flybrains/flybrains-0.6.3-py3-none-any.whl",
+      "size_bytes": 53197545,
+      "sha256": "a74755ea5db431864458356384a234ce2f30d7856e099a2bcf9e55e117196d95",
+      "retrieved_utc": "2026-09-25T13:04:33+00:00",
+      "extracted": {
+        "flybrains/meshes/FLYWIRE_whole_brain.ply": {
+          "path": "data/raw/flybrains/FLYWIRE_whole_brain.ply",
+          "size_bytes": 1867385,
+          "sha256": "b0e16ef5e8ec5b450b52d79a866322ad30c0bc44651226eb291f2377f53456ab"
+        },
+        "flybrains/meshes/FLYWIRE.ply": {
+          "path": "data/raw/flybrains/FLYWIRE.ply",
+          "size_bytes": 956191,
+          "sha256": "2f345b8c66305d51cfb0f78489742fdc31a06d74d231a9e207d511c9789d516e"
+        },
+        "flybrains-0.6.3.dist-info/licenses/LICENSE": {
+          "path": "data/raw/flybrains/LICENSE",
+          "size_bytes": 35149,
+          "sha256": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986"
+        }
+      }
+    }
+  },
+  "unreachable_official_sources": [
+    {
+      "key": "zenodo_10676866_connections",
+      "url": "https://zenodo.org/api/records/10676866/files/proofread_connections_783.feather/content",
+      "role": "official FlyWire 783 connection table (pre, post, neuropil, syn_count, NT averages)",
+      "substitute": "shiu_connectivity_783 (authors' aggregation of the same release; equivalence evidence in NOTES.md)",
+      "checked_utc": "2026-09-25T13:04:33+00:00",
+      "status": "unreachable: ProxyError: HTTPSConnectionPool(host='zenodo.org', port=443): Max retries exceeded with url: /api/records/10676866/files/proofread_connections_783.feather/content (Caused b"
+    },
+    {
+      "key": "zenodo_10877326_skeletons",
+      "url": "https://zenodo.org/records/10877326",
+      "role": "official FlyWire 783 skeleton download",
+      "substitute": "public segmentation bucket gs://flywire_v141_m783, layer skeletons_mip_1 (fetched per neuron by render/pathway.py)",
+      "checked_utc": "2026-09-25T13:04:33+00:00",
+      "status": "unreachable: ProxyError: HTTPSConnectionPool(host='zenodo.org', port=443): Max retries exceeded with url: /records/10877326 (Caused by ProxyError('Unable to connect to proxy', OSError('"
+    },
+    {
+      "key": "flywire_codex",
+      "url": "https://codex.flywire.ai/api/download",
+      "role": "FlyWire Codex downloads and documentation",
+      "substitute": "none needed",
+      "checked_utc": "2026-09-25T13:04:34+00:00",
+      "status": "unreachable: ProxyError: HTTPSConnectionPool(host='codex.flywire.ai', port=443): Max retries exceeded with url: /api/download (Caused by ProxyError('Unable to connect to proxy', OSError"
+    }
+  ],
+  "skeletons": {
+    "720575940639198653": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/fa42.shard",
+      "byte_range": [
+        350009,
+        471630
+      ],
+      "retrieved_utc": "2026-09-25T13:35:48+00:00",
+      "decoded_sha256": "b62b1a136250f648cbd4d0f0a91d2b6bae3ef1168b4fff0e1d3d718465fda3b3",
+      "vertices": 10588,
+      "edges": 10579,
+      "resampled_segments": 389,
+      "resample_step_nm": 1500.0
+    },
+    "720575940633143833": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/b86f.shard",
+      "byte_range": [
+        452145,
+        602098
+      ],
+      "retrieved_utc": "2026-09-25T13:35:48+00:00",
+      "decoded_sha256": "13af2d399074202d34539d60e5919cab2448ba41b141e27c92dc7f3affa6de01",
+      "vertices": 13403,
+      "edges": 13399,
+      "resampled_segments": 469,
+      "resample_step_nm": 1500.0
+    },
+    "720575940632425919": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/d1fa.shard",
+      "byte_range": [
+        904229,
+        1031888
+      ],
+      "retrieved_utc": "2026-09-25T13:35:48+00:00",
+      "decoded_sha256": "8fe1c2aa63b5efeaf87778b30c5acfe0052e1175d0c55e99c61d4f3c0cc39ab7",
+      "vertices": 11237,
+      "edges": 11236,
+      "resampled_segments": 418,
+      "resample_step_nm": 1500.0
+    },
+    "720575940628853239": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/ee50.shard",
+      "byte_range": [
+        523837,
+        644008
+      ],
+      "retrieved_utc": "2026-09-25T13:35:49+00:00",
+      "decoded_sha256": "fbe7160106873177ecbb5f9ae968fe03faa883c1c36b873cd174d2690352afee",
+      "vertices": 10786,
+      "edges": 10778,
+      "resampled_segments": 378,
+      "resample_step_nm": 1500.0
+    },
+    "720575940611875570": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/363b.shard",
+      "byte_range": [
+        254664,
+        367817
+      ],
+      "retrieved_utc": "2026-09-25T13:35:49+00:00",
+      "decoded_sha256": "5ce1b3ff9ae6a1e9ca88063dc45712399810d94aebe325c039ef85525cb90fd4",
+      "vertices": 10129,
+      "edges": 10126,
+      "resampled_segments": 380,
+      "resample_step_nm": 1500.0
+    },
+    "720575940616885538": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/134e.shard",
+      "byte_range": [
+        226075,
+        332463
+      ],
+      "retrieved_utc": "2026-09-25T13:35:50+00:00",
+      "decoded_sha256": "622e88acd0e3e753de09337221ff0220f9bd03364bd3722886999248628ec694",
+      "vertices": 9390,
+      "edges": 9388,
+      "resampled_segments": 349,
+      "resample_step_nm": 1500.0
+    },
+    "720575940624023188": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/4515.shard",
+      "byte_range": [
+        408492,
+        1604306
+      ],
+      "retrieved_utc": "2026-09-25T13:35:51+00:00",
+      "decoded_sha256": "38355dda72a89a95b9c54f0a5e7e41b82ccb86a38a951d3ba99864402aa6fe20",
+      "vertices": 101901,
+      "edges": 101890,
+      "resampled_segments": 4282,
+      "resample_step_nm": 1500.0
+    },
+    "720575940619114048": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/faba.shard",
+      "byte_range": [
+        600835,
+        1825172
+      ],
+      "retrieved_utc": "2026-09-25T13:35:52+00:00",
+      "decoded_sha256": "7a4bb57c329c73c2f80225200cab6f049978bd94b30f7aa1ea7f78bfe774c70c",
+      "vertices": 103959,
+      "edges": 103939,
+      "resampled_segments": 4283,
+      "resample_step_nm": 1500.0
+    },
+    "720575940620874757": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/3725.shard",
+      "byte_range": [
+        736312,
+        1180484
+      ],
+      "retrieved_utc": "2026-09-25T13:35:52+00:00",
+      "decoded_sha256": "258fc0b7e29a1107f052ea79ca45db8827f9853b768169b06246131239ac2453",
+      "vertices": 39186,
+      "edges": 39183,
+      "resampled_segments": 1685,
+      "resample_step_nm": 1500.0
+    },
+    "720575940632365905": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/9baa.shard",
+      "byte_range": [
+        295754,
+        1571031
+      ],
+      "retrieved_utc": "2026-09-25T13:35:53+00:00",
+      "decoded_sha256": "2fc4df8b176844d157c52934617f6c2c65e88271b6a98ac1fe7867d806bbfe43",
+      "vertices": 107659,
+      "edges": 107657,
+      "resampled_segments": 4254,
+      "resample_step_nm": 1500.0
+    },
+    "720575940626835146": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/1f2e.shard",
+      "byte_range": [
+        306205,
+        1170885
+      ],
+      "retrieved_utc": "2026-09-25T13:35:54+00:00",
+      "decoded_sha256": "c3ad121622724c84f8cbc625b9d4d464b6753aa6bd669baf37727e6227f59897",
+      "vertices": 75109,
+      "edges": 75103,
+      "resampled_segments": 3291,
+      "resample_step_nm": 1500.0
+    },
+    "720575940630579574": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/2990.shard",
+      "byte_range": [
+        832649,
+        2369417
+      ],
+      "retrieved_utc": "2026-09-25T13:35:55+00:00",
+      "decoded_sha256": "b4255dfe5fb683bc945f54fcc936e111518e9b700b1e7f32afa20a28a73a5670",
+      "vertices": 130146,
+      "edges": 130141,
+      "resampled_segments": 5589,
+      "resample_step_nm": 1500.0
+    },
+    "720575940619877396": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/f0fa.shard",
+      "byte_range": [
+        1022843,
+        3086092
+      ],
+      "retrieved_utc": "2026-09-25T13:35:56+00:00",
+      "decoded_sha256": "cb71c779258aeb7e58d945b8d20b5888f74828cda7114e1e38529ed3ea5a11f7",
+      "vertices": 173589,
+      "edges": 173571,
+      "resampled_segments": 7270,
+      "resample_step_nm": 1500.0
+    },
+    "720575940628972048": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/0d11.shard",
+      "byte_range": [
+        1706980,
+        2429307
+      ],
+      "retrieved_utc": "2026-09-25T13:35:57+00:00",
+      "decoded_sha256": "e963c600b00a0cfd91ae480e22f001946353f058de29430b09ccc541d520a814",
+      "vertices": 62903,
+      "edges": 62901,
+      "resampled_segments": 2558,
+      "resample_step_nm": 1500.0
+    },
+    "720575940607272649": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/f4d9.shard",
+      "byte_range": [
+        203182,
+        2072884
+      ],
+      "retrieved_utc": "2026-09-25T13:35:58+00:00",
+      "decoded_sha256": "59c9f06b214fe52db32349da6d248b4a7f3e256a72835a5d0da4d137897b171b",
+      "vertices": 155093,
+      "edges": 155086,
+      "resampled_segments": 6393,
+      "resample_step_nm": 1500.0
+    },
+    "720575940623211725": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/783e.shard",
+      "byte_range": [
+        2210366,
+        4160443
+      ],
+      "retrieved_utc": "2026-09-25T13:35:59+00:00",
+      "decoded_sha256": "e1a4465f0bd0abb1dc180199109b0400cb7a81e3bb8dd79207ee2d4456508d71",
+      "vertices": 163100,
+      "edges": 163096,
+      "resampled_segments": 6948,
+      "resample_step_nm": 1500.0
+    },
+    "720575940627099338": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/f1ea.shard",
+      "byte_range": [
+        362779,
+        1943822
+      ],
+      "retrieved_utc": "2026-09-25T13:36:01+00:00",
+      "decoded_sha256": "36a920b9a40dcf16f0b746776ef1d9e9b0563bec218581ff4be6cd88d685d49d",
+      "vertices": 133889,
+      "edges": 133876,
+      "resampled_segments": 5626,
+      "resample_step_nm": 1500.0
+    },
+    "720575940632252743": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/8839.shard",
+      "byte_range": [
+        487083,
+        2214428
+      ],
+      "retrieved_utc": "2026-09-25T13:36:02+00:00",
+      "decoded_sha256": "252f2cc78edb11c946ab8d0b855ba687f832dca61d71a76a6aa1b53aaac6dcda",
+      "vertices": 145628,
+      "edges": 145616,
+      "resampled_segments": 6260,
+      "resample_step_nm": 1500.0
+    },
+    "720575940621261296": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/c8f0.shard",
+      "byte_range": [
+        258482,
+        1885862
+      ],
+      "retrieved_utc": "2026-09-25T13:36:03+00:00",
+      "decoded_sha256": "cbae082c6f0c916088f982ff5f2908f3d76326db79f8661ed117e788cee13a94",
+      "vertices": 136481,
+      "edges": 136474,
+      "resampled_segments": 5735,
+      "resample_step_nm": 1500.0
+    },
+    "720575940609407939": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/382f.shard",
+      "byte_range": [
+        241820,
+        2061521
+      ],
+      "retrieved_utc": "2026-09-25T13:36:04+00:00",
+      "decoded_sha256": "64dd218d34f95fcba74fc66dbbd458546303e192ca501681fe16c3f5dafaba17",
+      "vertices": 153555,
+      "edges": 153545,
+      "resampled_segments": 6630,
+      "resample_step_nm": 1500.0
+    },
+    "720575940627847752": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/49b1.shard",
+      "byte_range": [
+        2056183,
+        3911017
+      ],
+      "retrieved_utc": "2026-09-25T13:36:05+00:00",
+      "decoded_sha256": "c2821062c82387390edfd25c46dc8d9f9632c05813d7a79b540c929634ea16f3",
+      "vertices": 157735,
+      "edges": 157716,
+      "resampled_segments": 6923,
+      "resample_step_nm": 1500.0
+    },
+    "720575940615671106": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/09c9.shard",
+      "byte_range": [
+        277720,
+        2493242
+      ],
+      "retrieved_utc": "2026-09-25T13:36:07+00:00",
+      "decoded_sha256": "e6a5e5044c7a1b99ff3274956cc2021541a618559a57b6e733fdc9fec62b629d",
+      "vertices": 186549,
+      "edges": 186544,
+      "resampled_segments": 7918,
+      "resample_step_nm": 1500.0
+    },
+    "720575940618238523": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/b2fa.shard",
+      "byte_range": [
+        2374016,
+        4964292
+      ],
+      "retrieved_utc": "2026-09-25T13:36:08+00:00",
+      "decoded_sha256": "af4e027e992a30a93cdb6715c67f012bafb70edb6e8b27747e4573af6a951195",
+      "vertices": 214021,
+      "edges": 213997,
+      "resampled_segments": 10172,
+      "resample_step_nm": 1500.0
+    },
+    "720575940660219265": {
+      "source": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1 (FlyWire public release 783 segmentation, precomputed skeletons)",
+      "shard_url": "https://storage.googleapis.com/flywire_v141_m783/skeletons_mip_1/729c.shard",
+      "byte_range": [
+        516764,
+        3112307
+      ],
+      "retrieved_utc": "2026-09-25T13:36:10+00:00",
+      "decoded_sha256": "b33358f23088fb9eeca6b1ee55c2ef1c71947c82cf99cf6fdb06014a4e80f722",
+      "vertices": 213348,
+      "edges": 213307,
+      "resampled_segments": 10142,
+      "resample_step_nm": 1500.0
+    }
+  }
+}

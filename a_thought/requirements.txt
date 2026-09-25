@@ -1,0 +1,16 @@
+Brian2==2.9.0
+Cython==3.3.0
+glcontext==3.0.0
+matplotlib==3.11.2
+mmh3==5.3.0
+moderngl==5.12.0
+networkx==3.6.1
+numpy==2.4.6
+pandas==3.0.6
+pillow==12.3.0
+pyarrow==25.0.1
+pytest==9.1.1
+requests==2.34.2
+scipy==1.17.1
+sympy==1.14.0
+trimesh==5.1.0

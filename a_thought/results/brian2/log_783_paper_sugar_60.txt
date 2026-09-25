@@ -1,0 +1,5 @@
+>>> Experiment:     b2_783_paper_sugar_150Hz_60tr
+    Output file:    /home/user/Brain/a_thought/results/brian2/b2_783_paper_sugar_150Hz_60tr.parquet
+    Excited neurons: 20
+    Elapsed time:   556 s
+done b2_783_paper_sugar_150Hz_60tr in 560 s

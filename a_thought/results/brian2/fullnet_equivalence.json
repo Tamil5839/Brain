@@ -1,0 +1,25 @@
+{
+  "t_run_ms": 1000.0,
+  "seed": 0,
+  "input_events": 2959,
+  "spikes_ours": 12378,
+  "spikes_brian2": 12378,
+  "common": 12378,
+  "only_ours": 0,
+  "only_brian2": 0,
+  "first_difference": null,
+  "identical": true,
+  "mn9_ours": [
+    62,
+    83
+  ],
+  "mn9_brian2": [
+    62,
+    83
+  ],
+  "wall_s": {
+    "ours": 4.3,
+    "brian2": 6.5
+  },
+  "description": "authors' create_model() on Connectivity_783.parquet in Brian2 vs sim.model, paper sugar GRNs, identical fixed input events (SpikeGeneratorGroup -> v += w_syn*f_poi)"
+}

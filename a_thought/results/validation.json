@@ -1,0 +1,526 @@
+{
+  "created_utc": "2026-09-25T13:41:45+00:00",
+  "all_passed": false,
+  "tests": {
+    "1_data_integrity": {
+      "passed": true,
+      "checks": {
+        "v2.1.0 annotation lists 139,255 neurons": true,
+        "flypoke README 'Of 139,248 neurons' == annotation v3.1.0 rows": true,
+        "authors' model neurons all inside the v2.1.0 release table": true,
+        "connection table has no duplicates or self-connections": true,
+        ">=5-synapse connections ~2.7 million (flypoke README '~2.7 million')": true,
+        "sugar/water 129 and bitter 65 == flypoke README": true,
+        "28 ingestion motor neurons == flypoke README": true,
+        "MN9 = 2 CB0701 neurons incl. Shiu et al. id": true,
+        "film stimulus: 20 of 21 paper sugar GRNs, 20 of 21 bitter GRNs present": true,
+        "every simulated neuron has a position": true,
+        "manifest records sha256 for every raw file": true
+      },
+      "counts": {
+        "neurons_simulated": 139262,
+        "annotation_v3_1_0": 139248,
+        "annotation_v2_1_0": 139255,
+        "authors_model": 138639,
+        "connections": 15091983,
+        "synapses": 54492922,
+        "connections_ge5": 2700513,
+        "positions": 139262,
+        "film_stimulus": {
+          "sugar": 20,
+          "bitter": 20
+        },
+        "annotation_classes": {
+          "sugar_water": 129,
+          "bitter": 65,
+          "mn9_cb0701": 2,
+          "ingestion_motor_neurons": 28
+        },
+        "annotation_v2_1_0_classes": {
+          "sugar_water": 131,
+          "bitter": 42
+        }
+      }
+    },
+    "2_sugar_drives_mn9": {
+      "passed": true,
+      "mn9_rate_hz": {
+        "left": {
+          "mean": 57.4,
+          "sd": 3.693237062523878,
+          "n": 30,
+          "sem": 0.6858169052933931
+        },
+        "right": {
+          "mean": 79.7,
+          "sd": 3.643716051871587,
+          "n": 30,
+          "sem": 0.6766210844734466
+        }
+      },
+      "criterion": "Shiu et al.'s MN9 (root 720575940660219265) at 150 Hz input lies within 0.85x-1.15x of the authors' stored outputs at 100 and 200 Hz input (67.0-93.3 Hz): [57.0, 107.3] Hz",
+      "flypoke_reported_hz": {
+        "right": 150.0,
+        "left": 111.6
+      },
+      "this_model_at_flypoke_settings_hz": {
+        "right": 106.2,
+        "left": 85.2
+      }
+    },
+    "3_bitter_does_not_drive_mn9": {
+      "passed": true,
+      "mn9_rate_hz": {
+        "left": {
+          "mean": 0.0,
+          "sd": 0.0,
+          "n": 30,
+          "sem": 0.0
+        },
+        "right": {
+          "mean": 0.0,
+          "sd": 0.0,
+          "n": 30,
+          "sem": 0.0
+        }
+      },
+      "criterion": "mean MN9 rate <= 1 Hz and no trial above 5 spikes"
+    },
+    "4_bitter_suppresses_sugar": {
+      "passed": true,
+      "mn9_rate_hz": {
+        "left": {
+          "mean": 14.133333333333333,
+          "sd": 2.0612833111653743,
+          "n": 30,
+          "sem": 0.3827707015455674
+        },
+        "right": {
+          "mean": 5.466666666666667,
+          "sd": 2.985892756874492,
+          "n": 30,
+          "sem": 0.5544663652482185
+        }
+      },
+      "reduction_vs_sugar": {
+        "left": 0.7537746806039489,
+        "right": 0.931409452112087
+      },
+      "welch_t_test_pair_mean": {
+        "t": -86.97329396770841,
+        "p": 6.74079044878002e-59
+      },
+      "criterion": "both MN9 lower with sugar+bitter; Welch t-test p < 0.001 (30 vs 30 trials)"
+    },
+    "5_baseline_silent": {
+      "passed": true,
+      "total_spikes": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        "..."
+      ]
+    },
+    "6_determinism": {
+      "passed": true,
+      "seed": 7,
+      "spikes": 12432,
+      "identical_same_seed": true,
+      "different_other_seed": true
+    }
+  },
+  "cross_checks": {
+    "a_published_outputs_630": {
+      "passed": true,
+      "criterion": "every MN9 mean within 3 standard errors of the authors' stored output",
+      "200Hz": {
+        "stored_file": "results/example/sugarR.parquet (Shiu et al. repository)",
+        "stimulus_rate_hz": 200.0,
+        "trials_ours": 30,
+        "trials_authors": 30,
+        "mn9": {
+          "720575940660219265": {
+            "ours": {
+              "mean": 92.6,
+              "sd": 4.506291897632317,
+              "n": 30,
+              "sem": 0.8367973978553418
+            },
+            "authors": {
+              "mean": 93.26666666666667,
+              "sd": 3.1510139461590594,
+              "n": 30,
+              "sem": 0.5851286003326133
+            },
+            "welch": {
+              "t": -0.6529031493388486,
+              "p": 0.5167012816265151
+            },
+            "diff_hz": -0.6666666666666714,
+            "diff_in_se": -0.6529031493388486
+          },
+          "720575940645521262": {
+            "ours": {
+              "mean": 62.8,
+              "sd": 5.793099343184096,
+              "n": 30,
+              "sem": 1.0757515416258276
+            },
+            "authors": {
+              "mean": 61.8,
+              "sd": 4.174525921187539,
+              "n": 30,
+              "sem": 0.7751900026637889
+            },
+            "welch": {
+              "t": 0.754172493947913,
+              "p": 0.4541010708345947
+            },
+            "diff_hz": 1.0,
+            "diff_in_se": 0.7541724939479132
+          }
+        },
+        "spikes_per_trial": {
+          "ours": {
+            "mean": 16953.3,
+            "sd": 368.6281911809423,
+            "n": 30,
+            "sem": 68.45253662294
+          },
+          "authors": 17052.2
+        },
+        "authors_sugar_grn_rate_hz": 196.75396825396825
+      },
+      "100Hz": {
+        "stored_file": "results/example/sugarR_100Hz.parquet (Shiu et al. repository)",
+        "stimulus_rate_hz": 100.0,
+        "trials_ours": 30,
+        "trials_authors": 30,
+        "mn9": {
+          "720575940660219265": {
+            "ours": {
+              "mean": 67.3,
+              "sd": 4.598188048931158,
+              "n": 30,
+              "sem": 0.8538620847479497
+            },
+            "authors": {
+              "mean": 67.03333333333333,
+              "sd": 6.595368745482612,
+              "n": 30,
+              "sem": 1.2247292295947518
+            },
+            "welch": {
+              "t": 0.17861157178327117,
+              "p": 0.8589393960261
+            },
+            "diff_hz": 0.2666666666666657,
+            "diff_in_se": 0.17861157178327117
+          },
+          "720575940645521262": {
+            "ours": {
+              "mean": 49.2,
+              "sd": 5.0424861592935155,
+              "n": 30,
+              "sem": 0.9363661726031128
+            },
+            "authors": {
+              "mean": 48.63333333333333,
+              "sd": 4.672496358716851,
+              "n": 30,
+              "sem": 0.867660791462969
+            },
+            "welch": {
+              "t": 0.4438997621095705,
+              "p": 0.6587763120890539
+            },
+            "diff_hz": 0.56666666666667,
+            "diff_in_se": 0.4438997621095705
+          }
+        },
+        "spikes_per_trial": {
+          "ours": {
+            "mean": 9726.666666666666,
+            "sd": 373.31964260611244,
+            "n": 30,
+            "sem": 69.32371728187819
+          },
+          "authors": 9635.766666666666
+        },
+        "authors_sugar_grn_rate_hz": 98.9825396825397
+      }
+    },
+    "b_brian2": {
+      "passed": false,
+      "full_network_poisson": {
+        "source": "authors' model.py run_exp(), unmodified, Brian2 2.5.1, cython target; v783, paper sugar GRNs, 150 Hz",
+        "files": [
+          "b2_783_paper_sugar_150Hz_24tr",
+          "b2_783_paper_sugar_150Hz_6tr"
+        ],
+        "trials": 30,
+        "mn9_left": {
+          "mean": 57.9,
+          "sd": 4.338586559391588,
+          "n": 30,
+          "sem": 0.8056552983566329
+        },
+        "mn9_right": {
+          "mean": 76.93333333333334,
+          "sd": 4.850658603621665,
+          "n": 30,
+          "sem": 0.9007446897809513
+        },
+        "spikes_per_trial": {
+          "mean": 12788.433333333332,
+          "sd": 368.8724877545386,
+          "n": 30,
+          "sem": 68.49790135778947
+        },
+        "_per_trial_left": [
+          57,
+          53,
+          59,
+          58,
+          62,
+          55,
+          54,
+          60,
+          60,
+          56,
+          56,
+          48,
+          54,
+          51,
+          64,
+          62,
+          56,
+          66,
+          63,
+          55,
+          64,
+          64,
+          60,
+          56,
+          56,
+          58,
+          64,
+          59,
+          53,
+          54
+        ],
+        "_per_trial_right": [
+          77,
+          75,
+          76,
+          83,
+          79,
+          69,
+          69,
+          76,
+          80,
+          75,
+          75,
+          76,
+          69,
+          77,
+          87,
+          80,
+          82,
+          75,
+          80,
+          81,
+          82,
+          85,
+          86,
+          71,
+          71,
+          73,
+          75,
+          77,
+          73,
+          74
+        ],
+        "comparison_with_this_model": {
+          "left": {
+            "brian2": {
+              "mean": 57.9,
+              "sd": 4.338586559391588,
+              "n": 30,
+              "sem": 0.8056552983566329
+            },
+            "ours": {
+              "mean": 57.4,
+              "sd": 3.693237062523878,
+              "n": 30,
+              "sem": 0.6858169052933931
+            },
+            "welch": {
+              "t": -0.4725768549865517,
+              "p": 0.6383336561976665
+            },
+            "diff_in_se": -0.4725768549865517
+          },
+          "right": {
+            "brian2": {
+              "mean": 76.93333333333334,
+              "sd": 4.850658603621665,
+              "n": 30,
+              "sem": 0.9007446897809513
+            },
+            "ours": {
+              "mean": 79.7,
+              "sd": 3.643716051871587,
+              "n": 30,
+              "sem": 0.6766210844734466
+            },
+            "welch": {
+              "t": 2.4558347925505664,
+              "p": 0.01731529622503051
+            },
+            "diff_in_se": 2.455834792550567
+          }
+        }
+      },
+      "micro_equivalence": {
+        "description": "random 80-neuron networks, authors' equations/parameters in Brian2 vs sim.model, identical fixed input events, 400 ms each",
+        "runs": [
+          {
+            "spikes_ours": 345,
+            "spikes_brian2": 345,
+            "identical_spikes": true,
+            "max_abs_dv_mV": 7.958078640513122e-13,
+            "n_input_events": 345
+          },
+          {
+            "spikes_ours": 369,
+            "spikes_brian2": 369,
+            "identical_spikes": true,
+            "max_abs_dv_mV": 8.313350008393172e-13,
+            "n_input_events": 363
+          },
+          {
+            "spikes_ours": 412,
+            "spikes_brian2": 412,
+            "identical_spikes": true,
+            "max_abs_dv_mV": 8.455458555545192e-13,
+            "n_input_events": 394
+          }
+        ],
+        "identical": true
+      }
+    },
+    "c_flypoke": {
+      "passed": true,
+      "criterion": "flypoke's own code reproduces its README table exactly on this connectome; this model at flypoke's settings shows the same qualitative result and an MN9 rate within a factor 2 of flypoke's",
+      "ratio_mn9_right": 0.7080000000000001,
+      "flypoke_readme_table": {
+        "sugar": {
+          "mn9_right": 150.0,
+          "mn9_left": 111.6,
+          "ingestion_mean": 56.2,
+          "active": 439
+        },
+        "bitter": {
+          "mn9_right": 0.0,
+          "mn9_left": 0.0,
+          "ingestion_mean": 0.0,
+          "active": 529
+        },
+        "sugar + bitter": {
+          "mn9_right": 14.4,
+          "mn9_left": 8.8,
+          "ingestion_mean": 40.4,
+          "active": 419
+        }
+      },
+      "flypoke_code_on_this_connectome": {
+        "sugar": {
+          "mn9_right": 150.0,
+          "mn9_left": 111.6,
+          "ingestion_mean": 56.2,
+          "active": 439
+        },
+        "bitter": {
+          "mn9_right": 0.0,
+          "mn9_left": 0.0,
+          "ingestion_mean": 0.0,
+          "active": 529
+        },
+        "sugar + bitter": {
+          "mn9_right": 14.4,
+          "mn9_left": 8.8,
+          "ingestion_mean": 40.4,
+          "active": 419
+        }
+      },
+      "flypoke_readme_reproduced_exactly": true,
+      "flypoke_network": {
+        "connections": 2700429,
+        "note": "Connectivity_783.parquet, >=5 synapses, annotation top_nt signs; connections of the 14 neurons without v3.1.0 annotation dropped, as flypoke does"
+      },
+      "this_model_flypoke_settings": {
+        "sugar": {
+          "mn9_right": 106.2,
+          "mn9_left": 85.2,
+          "ingestion_mean": 33.2,
+          "active": 417,
+          "spikes_per_trial": 34796
+        },
+        "bitter": {
+          "mn9_right": 0.0,
+          "mn9_left": 0.0,
+          "ingestion_mean": 0.0,
+          "active": 62,
+          "spikes_per_trial": 12155
+        },
+        "sugar + bitter": {
+          "mn9_right": 11.6,
+          "mn9_left": 7.2,
+          "ingestion_mean": 21.1,
+          "active": 339,
+          "spikes_per_trial": 40004
+        }
+      },
+      "this_model_authors_network_annotation_classes": {
+        "sugar": {
+          "mn9_right": 92.4,
+          "mn9_left": 63.8,
+          "ingestion_mean": 33.8,
+          "active": 8506,
+          "spikes_per_trial": 476722
+        },
+        "bitter": {
+          "mn9_right": 0.0,
+          "mn9_left": 0.0,
+          "ingestion_mean": 0.0,
+          "active": 1968,
+          "spikes_per_trial": 37352
+        },
+        "sugar + bitter": {
+          "mn9_right": 0.4,
+          "mn9_left": 0.6,
+          "ingestion_mean": 10.5,
+          "active": 8447,
+          "spikes_per_trial": 486103
+        }
+      },
+      "settings": {
+        "trials": 5,
+        "seeds": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "rate_hz": 150.0,
+        "sugar_n": 129,
+        "bitter_n": 65
+      }
+    }
+  },
+  "wall_time_s": 536.5
+}

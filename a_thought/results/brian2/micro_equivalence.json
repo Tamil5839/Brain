@@ -1,0 +1,27 @@
+{
+  "description": "random 80-neuron networks, authors' equations/parameters in Brian2 vs sim.model, identical fixed input events, 400 ms each",
+  "runs": [
+    {
+      "spikes_ours": 345,
+      "spikes_brian2": 345,
+      "identical_spikes": true,
+      "max_abs_dv_mV": 7.958078640513122e-13,
+      "n_input_events": 345
+    },
+    {
+      "spikes_ours": 369,
+      "spikes_brian2": 369,
+      "identical_spikes": true,
+      "max_abs_dv_mV": 8.313350008393172e-13,
+      "n_input_events": 363
+    },
+    {
+      "spikes_ours": 412,
+      "spikes_brian2": 412,
+      "identical_spikes": true,
+      "max_abs_dv_mV": 8.455458555545192e-13,
+      "n_input_events": 394
+    }
+  ],
+  "identical": true
+}

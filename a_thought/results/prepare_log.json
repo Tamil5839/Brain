@@ -1,0 +1,224 @@
+{
+  "neurons": {
+    "annotation_v3_1_0": 139248,
+    "annotation_v2_1_0_paper_version": 139255,
+    "authors_v783_model": 138639,
+    "authors_model_not_in_v3_1_0": 14,
+    "authors_model_not_in_v2_1_0": 0,
+    "v3_1_0_only": 7,
+    "v2_1_0_only": 14,
+    "without_connections": 623,
+    "simulated_total": 139262
+  },
+  "positions": {
+    "soma": 118111,
+    "anchor_point_no_soma": 21151,
+    "no_position": 0,
+    "no_position_root_ids": [],
+    "note": "neurons without a position are simulated but not rendered"
+  },
+  "render_space": {
+    "axes": {
+      "x_increases_toward_fly_right": true,
+      "y_increases_ventrally": true,
+      "z_increases_posteriorly": true,
+      "evidence_nm": {
+        "mean_x_right": 729754.5486279959,
+        "mean_x_left": 314438.4198850805,
+        "mean_y_gustatory": 348877.1176470588,
+        "mean_y_PI_ocellar": 123812.38095238095,
+        "mean_z_olfactory": 32810.44697633655,
+        "mean_z_kenyon": 192563.26057562296
+      }
+    },
+    "center_nm": [
+      491509.52734375,
+      252469.771484375,
+      140829.5625
+    ],
+    "axis_sign": [
+      -1.0,
+      -1.0,
+      -1.0
+    ],
+    "scale_per_nm": 2.3830373391511466e-06,
+    "frame": "+X = fly's left, +Y = dorsal, +Z = anterior (right-handed)",
+    "positions_inside_unit_box": 139262,
+    "positioned": 139262
+  },
+  "connectivity": {
+    "source": "Connectivity_783.parquet (Shiu et al. repository)",
+    "connections": 15091983,
+    "synapses": 54492922,
+    "min_synapses_per_connection": 1,
+    "max_synapses_per_connection": 2405,
+    "excitatory_connections": 9059302,
+    "inhibitory_connections": 6032681,
+    "connections_ge5_synapses": 2700513,
+    "synapses_in_connections_ge5": 34153566,
+    "self_connections": 0,
+    "connections_touching_unannotated": 0
+  },
+  "transmitters": {
+    "model_sign_counts": {
+      "1": 96672,
+      "-1": 41333,
+      "0": 1257
+    },
+    "color_class_counts": {
+      "excitatory": 88769,
+      "inhibitory": 41496,
+      "other": 8997
+    },
+    "annotation_top_nt_vs_model_sign": {
+      "acetylcholine|-1": 1719,
+      "acetylcholine|0": 313,
+      "acetylcholine|1": 84164,
+      "dopamine|-1": 3,
+      "dopamine|0": 9,
+      "dopamine|1": 5897,
+      "gaba|-1": 17733,
+      "gaba|0": 92,
+      "gaba|1": 1349,
+      "glutamate|-1": 21868,
+      "glutamate|0": 71,
+      "glutamate|1": 2943,
+      "octopamine|-1": 1,
+      "octopamine|0": 23,
+      "octopamine|1": 192,
+      "serotonin|-1": 9,
+      "serotonin|0": 146,
+      "serotonin|1": 2127,
+      "unknown|-1": 0,
+      "unknown|0": 603,
+      "unknown|1": 0
+    },
+    "sign_disagrees_with_top_nt": 6024
+  },
+  "groups": {
+    "sugar": {
+      "selector": "cell_sub_class == 'sugar/water' (annotation v3.1.0)",
+      "n": 129,
+      "by_side": {
+        "left": 67,
+        "right": 62
+      },
+      "with_outgoing_connections": 129,
+      "in_authors_model": 129
+    },
+    "bitter": {
+      "selector": "cell_sub_class == 'bitter' (annotation v3.1.0)",
+      "n": 65,
+      "by_side": {
+        "right": 33,
+        "left": 32
+      },
+      "with_outgoing_connections": 65,
+      "in_authors_model": 65
+    },
+    "mn9": {
+      "selector": "cell_type == 'CB0701'; contains Shiu et al. MN9 root id 720575940660219265",
+      "n": 2,
+      "by_side": {
+        "left": 1,
+        "right": 1
+      },
+      "with_outgoing_connections": 2,
+      "in_authors_model": 2,
+      "sides": [
+        "left",
+        "right"
+      ],
+      "shiu_mn9_root_id": 720575940660219265
+    },
+    "ingestion_motor_neurons": {
+      "selector": "cell_sub_class == 'ingestion_motor_neuron'",
+      "n": 28,
+      "by_side": {
+        "right": 15,
+        "left": 13
+      },
+      "with_outgoing_connections": 28,
+      "in_authors_model": 28
+    },
+    "paper_lists_630": {
+      "note": "Shiu et al. figures.ipynb lists (snapshot 630, right hemisphere); ids unchanged in 783 are listed",
+      "sugar_right_in_783": [
+        720575940624963786,
+        720575940630233916,
+        720575940637568838,
+        720575940638202345,
+        720575940617000768,
+        720575940630797113,
+        720575940632889389,
+        720575940621754367,
+        720575940621502051,
+        720575940640649691,
+        720575940639332736,
+        720575940616885538,
+        720575940639198653,
+        720575940617937543,
+        720575940632425919,
+        720575940633143833,
+        720575940612670570,
+        720575940628853239,
+        720575940629176663,
+        720575940611875570
+      ],
+      "bitter_right_in_783": [
+        720575940621778381,
+        720575940602353632,
+        720575940617094208,
+        720575940619197093,
+        720575940626287336,
+        720575940627692048,
+        720575940630195909,
+        720575940646212996,
+        720575940610483162,
+        720575940645743412,
+        720575940627578156,
+        720575940622298631,
+        720575940621008895,
+        720575940629146711,
+        720575940610259370,
+        720575940610481370,
+        720575940619028208,
+        720575940614281266,
+        720575940613061118,
+        720575940604027168
+      ],
+      "n_sugar_630": 21,
+      "n_bitter_630": 21
+    },
+    "annotation_v2.1.0_counts": {
+      "sugar_water": 131,
+      "bitter": 42,
+      "cb0701": 2,
+      "neurons": 139255
+    }
+  },
+  "regions": {
+    "optic_left": 43340,
+    "optic_right": 42773,
+    "central": 35627,
+    "sensory": 17522
+  },
+  "shell": {
+    "source": "flybrains 0.6.3 meshes/FLYWIRE_whole_brain.ply",
+    "vertices": 48995,
+    "faces": 98402,
+    "bounds_render": [
+      [
+        -1.0,
+        -0.48930102586746216,
+        -0.3354966640472412
+      ],
+      [
+        1.0,
+        0.48930102586746216,
+        0.3354966640472412
+      ]
+    ],
+    "neurons_inside_mesh_bbox": 139262
+  }
+}

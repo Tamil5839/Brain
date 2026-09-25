@@ -1,0 +1,11 @@
+.venv/
+.venv-brian2/
+__pycache__/
+*.pyc
+.pytest_cache/
+# raw downloads and derived binaries are re-created by fetch.py / prepare.py
+a_thought/data/raw/
+a_thought/data/processed/
+# render outputs (final deliverables are copied/linked explicitly)
+a_thought/out/*
+!a_thought/out/poster.png
