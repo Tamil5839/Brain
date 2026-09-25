@@ -1,5 +1,5 @@
 {
-  "created_utc": "2026-09-25T14:05:22+00:00",
+  "created_utc": "2026-09-25T14:13:46+00:00",
   "all_passed": true,
   "tests": {
     "1_data_integrity": {
@@ -680,7 +680,7 @@
           "mn9_right": 106.2,
           "mn9_left": 85.2,
           "ingestion_mean": 33.2,
-          "active": 417,
+          "active": 435,
           "spikes_per_trial": 34796
         },
         "bitter": {
@@ -694,7 +694,7 @@
           "mn9_right": 11.6,
           "mn9_left": 7.2,
           "ingestion_mean": 21.1,
-          "active": 339,
+          "active": 362,
           "spikes_per_trial": 40004
         }
       },
@@ -703,21 +703,21 @@
           "mn9_right": 92.4,
           "mn9_left": 63.8,
           "ingestion_mean": 33.8,
-          "active": 8506,
+          "active": 8585,
           "spikes_per_trial": 476722
         },
         "bitter": {
           "mn9_right": 0.0,
           "mn9_left": 0.0,
           "ingestion_mean": 0.0,
-          "active": 1968,
+          "active": 6662,
           "spikes_per_trial": 37352
         },
         "sugar + bitter": {
           "mn9_right": 0.4,
           "mn9_left": 0.6,
           "ingestion_mean": 10.5,
-          "active": 8447,
+          "active": 8527,
           "spikes_per_trial": 486103
         }
       },
@@ -736,5 +736,5 @@
       }
     }
   },
-  "wall_time_s": 365.1
+  "wall_time_s": 287.8
 }

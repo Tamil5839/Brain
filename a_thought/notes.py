@@ -196,9 +196,10 @@ def main():
     g = load_json(ROOT / "data/processed/groups.json")
     w("## 6. Stimuli, experiments and validation\n")
     w("### Stimulus identification\n")
+    sides = lambda d: ", ".join(f"{v} {k}" for k, v in sorted(d.items()))
     w(f"- Annotation classes (v3.1.0), identical to flypoke's `feeding` selectors: `cell_sub_class == 'sugar/water'` "
-      f"{g['sugar']['n']} neurons ({g['sugar']['by_side']}), `cell_sub_class == 'bitter'` {g['bitter']['n']} "
-      f"({g['bitter']['by_side']}), ingestion motor neurons {g['ingestion_motor_neurons']['n']}. In the paper-version "
+      f"{g['sugar']['n']} neurons ({sides(g['sugar']['by_side'])}), `cell_sub_class == 'bitter'` {g['bitter']['n']} "
+      f"({sides(g['bitter']['by_side'])}), ingestion motor neurons {g['ingestion_motor_neurons']['n']}. In the paper-version "
       f"annotation v2.1.0 these classes have {g['annotation_v2.1.0_counts']['sugar_water']} and "
       f"{g['annotation_v2.1.0_counts']['bitter']} neurons.")
     w(f"- **MN9**: there is no `cell_type == 'MN9'` in any annotation version. Shiu et al. use root id "
@@ -296,9 +297,20 @@ def main():
         for s in ("left", "right"):
             x = comp[s]
             w(f"  - MN9 {s}: Brian2 {fmt_mean_sd(x['brian2'])} Hz, this model {fmt_mean_sd(x['ours'])} Hz, difference "
-              f"{x['diff_in_se']:+.2f} s.e. (Welch p = {x['welch']['p']:.2f})")
+              f"{x['diff_in_se']:+.2f} s.e. (Welch p = {x['welch']['p']:.3f})")
         sp = comp["spikes_per_trial"]
         w(f"  - spikes per trial: Brian2 {sp['brian2']['mean']:,.0f}, this model {sp['ours']['mean']:,.0f}")
+        an = fn.get("all_neurons")
+        if an:
+            gr = an["grn_rate_hz"]
+            w(f"  - **every neuron** (the criterion): of the {an['active_neurons']} neurons active in either implementation, "
+              f"{an['significant_after_bonferroni']} differ after Bonferroni correction (threshold p < {an['bonferroni_threshold']:.1e}); "
+              f"{an['p_below_0_001']} have p < 0.001 ({an['expected_by_chance_at_0_001']:.2f} expected by chance). The smallest "
+              "p-values: " + "; ".join(f"{x['cell_type']} ({x['side']}) {x['brian2_hz']:.1f} vs {x['ours_hz']:.1f} Hz, p = {x['p']:.4f}"
+                                       for x in an["smallest_p"][:3])
+              + f". Stimulated GRNs fire at {gr['brian2']:.2f} Hz (Brian2) and {gr['ours']:.2f} Hz (this model). The right-MN9 "
+              "difference is therefore what 455 comparisons produce by chance; with identical input the two implementations "
+              "produce identical spikes (above).")
     w(f"\nResult: {'pass' if b2['passed'] else 'FAIL'}.\n")
 
     w("### 6c. Against flypoke\n")
@@ -316,7 +328,12 @@ def main():
     w(f"flypoke's table reproduced exactly: **{fp['flypoke_readme_reproduced_exactly']}**. At flypoke's settings this model "
       f"gives the same qualitative result with MN9 {fp['ratio_mn9_right']:.2f}× flypoke's rate; the difference comes from "
       "the Brian2 semantics above (flypoke keeps input that arrives during refractoriness and integrates with exponential "
-      "Euler). The last column shows the whole annotation classes in the exact model: MN9 behaves as expected, but "
+      "Euler). The same semantics explain why strongly driven pathways recruit more neurons in flypoke (e.g. bitter: "
+      f"{fp['flypoke_code_on_this_connectome']['bitter']['active']} active neurons in flypoke vs "
+      f"{fp['this_model_flypoke_settings']['bitter']['active']} here, on the identical network and stimulus): input kept "
+      "through the refractory period lets a strongly driven neuron fire again immediately. \"Active\" uses flypoke's "
+      "definition (mean rate over the trials > 1 Hz, minus the stimulated neurons). "
+      "The last column shows the whole annotation classes in the exact model: MN9 behaves as expected, but "
       "thousands of neurons become active (see section 6, stimulus identification). "
       f"Result: {'pass' if fp['passed'] else 'FAIL'} ({fp['criterion']}).\n")
 
@@ -336,7 +353,9 @@ def main():
     w("- MN9 readout: spikes of each MN9 neuron in the last 100 ms of brain time × 10 (Hz); after the trial the total "
       "spike count of the trial. The end-of-C comparison shows the MN9 spike counts of the two representative trials.")
     w("- Long exposure: every neuron that spiked in trial A, B or C is drawn in that trial's colour with brightness "
-      "∝ √(its spike count), accumulating in brain-time order.\n")
+      "∝ √(its spike count), accumulating in brain-time order (the three 1 s trials replayed together over 10 s of film). "
+      "During it the resting neurons fade to 12 % so that the points of light are the spikes; the glass shell keeps the "
+      "brain's outline.\n")
     w("**Visual aids (not part of the model):**\n")
     w(f"- **Pathway highlight.** {len(pw['neurons'])} neurons chosen from the representative sugar trial: MN9 (2), the "
       f"{pw['rule']['K1']} neurons with the largest (spikes × excitatory synapses onto MN9), the {pw['rule']['K2']} with the "
@@ -359,6 +378,31 @@ def main():
     for r in pw["neurons"]:
         w(f"| {lvl[r['level']]} | {r['root_id']} | {r['cell_type'] or ''} | {r['side']} | {r['spikes']} |")
     w("")
+    w("### Timeline\n")
+    from render.film import FORMATS, FilmData, Timeline
+
+    fd = FilmData()
+    for fmt_name in ("master", "vertical"):
+        tl = Timeline(FORMATS[fmt_name], fd)
+        f = FORMATS[fmt_name]
+        mmss = lambda t: f"{int(t // 60)}:{t % 60:05.2f}"
+        w(f"**{fmt_name}** ({f.size[0]}×{f.size[1]}, {f.fps} fps, {f.subframes} sub-frames, slow motion {f.slow:.0f}×, "
+          f"duration {mmss(tl.duration)}):\n")
+        w("| film time | what |\n|---|---|")
+        w(f"| {mmss(tl.darkness[0])}–{mmss(tl.darkness[1])} | darkness |")
+        w(f"| {mmss(tl.reveal[0])}–{mmss(tl.reveal[1])} | neurons fade in region by region (central brain, optic lobes, sensory), camera orbits |")
+        w(f"| {mmss(tl.glide[0])}–{mmss(tl.glide[1])} | camera glides to the subesophageal zone; sugar GRNs marked green |")
+        for seg in tl.segments:
+            w(f"| {mmss(seg.start)}–{mmss(seg.end)} | experiment {seg.key}: brain clock 0 → 1000 ms from {mmss(seg.t0)} to {mmss(seg.t1)} |")
+        w(f"| {mmss(tl.long[0])}–{mmss(tl.long[1])} | pull back; long exposure accumulates from {mmss(tl.accum[0])} to {mmss(tl.accum[1])} |")
+        w(f"| {mmss(tl.credits[0])}–{mmss(tl.credits[1])} | credits; final line |\n")
+        w("| caption | on screen |\n|---|---|")
+        for a, b, text in tl.captions:
+            w(f"| {text.format(**fd.numbers).replace(chr(10), ' ')} | {mmss(a)}–{mmss(b)} |")
+        w("")
+    w("Deviation from the brief's timing: with the same 25× slow motion for all three experiments (1 s of brain time = "
+      "25 s of film, inside the requested 25–35 s), experiments B and C need 28 s each instead of 25 s, so the master runs "
+      "2:36 instead of ~2:30. The vertical cut uses 10× slow motion so the same beats fit ~60 s.\n")
     w("### Captions and on-screen numbers\n")
     w(f"- \"{nums['neurons']:,} neurons. {nums['connections']:,} connections.\" — `results/prepare_log.json` "
       "(neurons simulated; connections in the authors' v783 table).")
@@ -382,7 +426,8 @@ def main():
     w("## 9. Reproduce\n")
     w("```\npip install -r requirements.txt   # plus ffmpeg, Mesa EGL, fonts-inter\npython fetch.py\npython prepare.py\n"
       "python -m sim.run\npython -m render.pathway\npython -m sim.validate          # Brian2 checks: see sim/brian2_reference.py, tests/\n"
-      "python -m render.film master && python -m render.film vertical && python -m render.film poster\npython notes.py\n```\n")
+      "python -m render.film master && python -m render.film 1080p\npython -m render.film vertical && python -m render.film poster\n"
+      "python notes.py\npython -m pytest tests/\n```\n")
 
     w("## 10. Credits\n")
     w("- FlyWire Consortium; Dorkenwald et al. 2024, *Nature* 634:124–138, \"Neuronal wiring diagram of an adult brain\".")
@@ -394,6 +439,9 @@ def main():
       "code and v783 files: github.com/philshiu/Drosophila_brain_model (MIT).")
     w("- flypoke (github.com/vshapenko/flypoke, MIT) — cross-checks; navis-flybrains (GPL v3) — FlyWire brain mesh; "
       "FlyWire release-783 skeletons (gs://flywire_v141_m783); Brian2; Inter typeface.\n")
+    w("The on-screen credits carry the same list (condensed in the vertical cut). The data licence wording could not be "
+      "confirmed against the primary FlyWire / Zenodo pages from this environment (section 2); the credits follow the "
+      "citation requirements stated in the flywire_annotations README.\n")
     w("## 11. Limitations\n")
     w("- The model is a point-neuron LIF model without plasticity, neuromodulation, gap junctions or behaviour; it shows "
       "what the wiring alone does under these assumptions, as in Shiu et al.")

@@ -457,7 +457,8 @@ class FilmRenderer:
         tl, d, sc = self.tl, self.d, self.d.scene
         dist = float(np.linalg.norm(self.cam["eye"] - tl.camera(T).target))
         self.size_scale = float(np.clip(dist / 3.3, 0.3, 1.1))
-        self.rest_level = 1.0 - 0.6 * ramp(T, tl.accum[0] - 1.0, tl.accum[0] + 2.0)
+        # during the long exposure the resting neurons fade almost out, so the points of light are the spikes
+        self.rest_level = 1.0 - 0.88 * ramp(T, tl.accum[0] - 1.0, tl.accum[0] + 2.0)
         p = (T - tl.reveal[0]) / (tl.reveal[1] - tl.reveal[0])
         vis = np.clip((p - sc.reveal_at) / 0.08, 0.0, 1.0).astype(np.float32)
         if T > tl.credits[0]:

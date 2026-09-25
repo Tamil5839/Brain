@@ -27,7 +27,7 @@ def make_poster(path: Path = OUT / "poster.png"):
     fr = FilmRenderer("master")
     tl = fr.tl
     T = tl.accum[1] + 2.0                        # accumulation complete, before the credits
-    pose = orbit_pose(-14, 13, 2.35, target=(0.0, -0.1, 0.0), fovy=30)
+    pose = orbit_pose(-14, 13, 2.45, target=(0.0, -0.05, 0.0), fovy=30)
     tl.camera = lambda _T: pose
     img = fr.frame(int(round(T * fr.f.fps)), overlays=False)
     W, H = fr.f.size
@@ -35,8 +35,9 @@ def make_poster(path: Path = OUT / "poster.png"):
     white = (236, 239, 246)
     nums = fr.d.numbers
     mx, my = int(0.06 * W), int(0.075 * H)
-    composite(img, text_rgba("A  THOUGHT", "light", int(96 * u), white, tracking=0.35), mx, my, 0.95)
-    sub = ("Every point of light is a spike in a simulation built on the real wiring of a fruit fly's brain.")
+    composite(img, text_rgba("A THOUGHT", "light", int(96 * u), white, tracking=0.3), mx, my, 0.95)
+    sub = ("Every coloured point of light is a neuron that spiked in a simulation built on the real wiring "
+           "of a fruit fly's brain.")
     composite(img, text_rgba(sub, "light", int(40 * u), white), mx, my + int(140 * u), 0.8)
     x, y = mx, my + int(215 * u)
     for ck, label in (("sugar", f"sugar ({nums['sugar_n']} taste neurons, 150 Hz)"),

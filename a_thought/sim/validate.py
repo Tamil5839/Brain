@@ -153,18 +153,16 @@ def flypoke_checks(n_trials=5) -> dict:
         for name, stim in {"sugar": [Stimulus(s_idx, 150.0)], "bitter": [Stimulus(b_idx, 150.0)],
                            "sugar + bitter": [Stimulus(s_idx, 150.0), Stimulus(b_idx, 150.0)]}.items():
             rates = []
-            active = []
             tot = []
             for k in range(n_trials):
                 tr = simulate(netw, stim, Params(), seed=k)
-                c = np.bincount(tr.neurons, minlength=netw.n)
-                rates.append(c)
-                n_stim = len(np.concatenate([s.indices for s in stim]))
-                active.append(int((c > 1.0).sum() - n_stim))  # 1 s trials: count > 1 <=> rate > 1 Hz
+                rates.append(np.bincount(tr.neurons, minlength=netw.n))
                 tot.append(len(tr.steps))
-            r = np.mean(rates, 0)
+            r = np.mean(rates, 0)                       # 1 s trials: mean count = mean rate in Hz
+            n_stim = len(np.concatenate([s.indices for s in stim]))
+            # flypoke's definition: neurons with mean rate > 1 Hz, minus the number of stimulated neurons
             res[name] = dict(mn9_right=round(float(r[mn9_ours[0]]), 1), mn9_left=round(float(r[mn9_ours[1]]), 1),
-                             ingestion_mean=round(float(r[ing].mean()), 1), active=int(np.mean(active)),
+                             ingestion_mean=round(float(r[ing].mean()), 1), active=int((r > 1.0).sum() - n_stim),
                              spikes_per_trial=int(np.mean(tot)))
         return res
 
