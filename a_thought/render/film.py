@@ -14,12 +14,14 @@ Usage:
   python -m render.film master   [--start S --end E]    3840x2160, 60 fps (chunked, resumable)
   python -m render.film vertical                         1080x1920, 60 fps
   python -m render.film poster                           out/poster.png
+  python -m render.film 1080p                            out/a_thought_1080p.mp4 from the master
   python -m render.film still T [--format master]        one frame as PNG
 """
 from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 import time
@@ -33,6 +35,7 @@ from PIL import Image
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from common import OUT, PREPARE_LOG, RESULTS, SPIKES, load_json, log, save_json  # noqa: E402
 
+from .cpu import CPURenderer  # noqa: E402
 from .fly import fly_rgba  # noqa: E402
 from .gl import GLRenderer  # noqa: E402
 from .overlay import TextBlock, composite, dot_rgba, text_rgba  # noqa: E402
@@ -64,6 +67,19 @@ def ramp(T, a, b):
 def window(T, a, b, fade=0.8):
     """1 inside [a, b] with smooth fades of `fade` seconds at both ends."""
     return min(ramp(T, a, a + fade), 1.0 - ramp(T, b - fade, b))
+
+
+def wrap(text, weight, size, max_w):
+    """Greedy word wrap using the real glyph widths."""
+    words, lines, cur = text.split(" "), [], ""
+    for wd in words:
+        trial = (cur + " " + wd).strip()
+        if cur and text_rgba(trial, weight, size).shape[1] > max_w:
+            lines.append(cur)
+            cur = wd
+        else:
+            cur = trial
+    return lines + [cur]
 
 
 # ============================================================================ data
@@ -112,6 +128,8 @@ class FilmData:
         self.skel = np.concatenate(segs)
         self.skel_owner = np.concatenate(owner)
         self.skel_color = self.scene.spike_color_film[self.skel_owner]
+        # MN9's own skeleton spans the whole region and fires at 60-110 Hz; its point already flashes white
+        self.skel_gain = np.where(np.isin(self.skel_owner, self.mn9), 0.025, 0.055).astype(np.float32)
         # arcs: quadratic Bezier between the two neurons' positions, bulging away from the brain centre
         P = self.scene.pos
         arcs, arc_pre = [], []
@@ -211,9 +229,9 @@ class Format:
 
 
 FORMATS = {
-    "master": Format("master", (3840, 2160), 60, 4, 25.0, crf=19, preset="medium"),
+    "master": Format("master", (3840, 2160), 60, 4, 25.0, crf=20, preset="medium"),
     "preview": Format("preview", (1280, 720), 30, 2, 25.0, crf=22, preset="veryfast"),
-    "vertical": Format("vertical", (1080, 1920), 60, 4, 10.0, portrait=True, crf=19, preset="medium"),
+    "vertical": Format("vertical", (1080, 1920), 60, 4, 10.0, portrait=True, crf=20, preset="medium"),
     "vertical_preview": Format("vertical_preview", (540, 960), 30, 2, 10.0, portrait=True, crf=22, preset="veryfast"),
 }
 
@@ -328,12 +346,20 @@ class Timeline:
 
 # ============================================================================ frames
 class FilmRenderer:
-    def __init__(self, fmt_name: str):
+    def __init__(self, fmt_name: str, backend: str | None = None):
         self.f = FORMATS[fmt_name]
         self.d = FilmData()
         self.tl = Timeline(self.f, self.d)
         W, H = self.f.size
-        self.r = GLRenderer(W, H)
+        backend = backend or os.environ.get("A_THOUGHT_RENDERER", "gl")
+        if backend == "gl":
+            try:
+                self.r = GLRenderer(W, H)
+            except Exception as e:  # no OpenGL at all: slow NumPy fallback
+                log(f"OpenGL unavailable ({e}); using the CPU fallback renderer")
+                self.r = CPURenderer(W, H)
+        else:
+            self.r = CPURenderer(W, H)
         sc = self.d.scene
         self.r.set_shell(sc.shell_vertices, sc.shell_normals, sc.shell_faces)
         self.base_size = np.full(sc.n, 0.0024, np.float32)
@@ -344,7 +370,7 @@ class FilmRenderer:
     # ------------------------------------------------------------------ layers
     def _neuron_layer(self, T, act, vis, gain):
         d, sc = self.d, self.d.scene
-        rest = LIN["resting"][None, :] * (0.13 * self.rest_level * vis)[:, None]
+        rest = LIN["resting"][None, :] * (0.16 * self.rest_level * vis)[:, None]
         col = rest + sc.spike_color_film * (act * 2.4)[:, None]
         size = self.base_size * self.size_scale * (1.0 + 1.6 * np.sqrt(np.minimum(act, 1.5)))
         col[~sc.drawn] = 0
@@ -358,8 +384,8 @@ class FilmRenderer:
         if mn9_on > 0:
             for m in d.mn9:
                 pts.append(d.scene.pos[m])
-                cols.append(LIN["mn9"] * (0.35 + 0.9 * min(act[m], 1.5)) * mn9_on)
-                sizes.append(0.034)
+                cols.append(LIN["mn9"] * (0.14 + 0.30 * min(act[m], 1.5)) * mn9_on)
+                sizes.append(0.028)
         if pts:
             self.r.draw_points("mn9ring", np.array(pts, np.float32), np.array(cols, np.float32),
                                np.array(sizes, np.float32), self.cam, gain=gain, ring=True)
@@ -369,12 +395,12 @@ class FilmRenderer:
                 self.r.draw_points(f"mark_{key}", d.scene.pos[idx], np.repeat(LIN[key][None] * 0.55 * amt, len(idx), 0).astype(np.float32),
                                    np.full(len(idx), 0.012, np.float32), self.cam, gain=gain)
 
-    def _pathway_layer(self, key, t_ms, act, gain, amount):
+    def _pathway_layer(self, key, t_ms, act, gain, amount, pulses=True):
         d = self.d
         if amount <= 0:
             return
         a = np.minimum(act[d.skel_owner], 1.5)[:, None]
-        col = (LIN["resting"][None] * 0.006 + d.skel_color * 0.10 * a) * amount
+        col = (LIN["resting"][None] * 0.006 + d.skel_color * d.skel_gain[:, None] * a) * amount
         self.r.draw_lines("skel", d.skel, col.astype(np.float32).repeat(2, 0), self.cam,
                           width_px=max(1.0, 2.0 * self.u), gain=gain)
         arc_col = np.repeat(LIN["resting"][None] * 0.035 * amount, len(d.arc_segs), 0).astype(np.float32)
@@ -382,6 +408,8 @@ class FilmRenderer:
         # pulses: each spike of a pathway neuron sends a light pulse along its outgoing arcs
         # (a visual aid: the model itself has a fixed 1.8 ms delay and no travel along wires)
         dt_brain = PULSE_FILM_S * 1000.0 / self.f.slow
+        if not pulses:          # only while the brain clock runs: no frozen pulses before or after the trial
+            return
         t, n = d.spikes_between(key, t_ms - dt_brain, t_ms, d.arc_sources)
         if len(t):
             pos, colp = [], []
@@ -393,9 +421,9 @@ class FilmRenderer:
                     i0 = int(min(x, len(curve) - 2))
                     p = curve[i0] + (curve[i0 + 1] - curve[i0]) * (x - i0)
                     pos.append(p)
-                    colp.append(d.scene.spike_color_film[pre] * 1.6 * amount)
+                    colp.append(d.scene.spike_color_film[pre] * 2.4 * amount)
             self.r.draw_points("pulses", np.array(pos, np.float32), np.array(colp, np.float32),
-                               np.full(len(pos), 0.007, np.float32), self.cam, gain=gain)
+                               np.full(len(pos), 0.009, np.float32), self.cam, gain=gain)
 
     # ------------------------------------------------------------------ one frame
     def frame(self, fi: int, overlays: bool = True) -> np.ndarray:
@@ -418,7 +446,7 @@ class FilmRenderer:
             state = self._draw_subframe(T, 1.0 / K)
         fade = 1.0 - ramp(T_frame, tl.duration - 1.6, tl.duration - 0.2)
         fade *= ramp(T_frame, 0.0, 0.01)
-        img = self.r.finish(exposure=f.exposure, bloom_strength=0.9, bloom_radius=1.0, grain=0.010,
+        img = self.r.finish(exposure=f.exposure, bloom_strength=0.9, bloom_radius=1.0, grain=0.008,
                             seed=fi * 0.618, fade=fade)
         img = np.ascontiguousarray(img)
         if overlays:
@@ -456,7 +484,8 @@ class FilmRenderer:
             if seg.key == "B_bitter":
                 bitter_mark = 0.0
             state["pathway"] = pathway_amt
-            self._pathway_layer(seg.key, min(max(t_ms, 0.0), 1000.0), act, gain, pathway_amt)
+            self._pathway_layer(seg.key, min(max(t_ms, 0.0), 1000.0), act, gain, pathway_amt,
+                                pulses=0.0 <= t_ms <= 1000.0)
         # long exposure: all spikes of the three experiments accumulate, coloured by experiment
         if tl.long[0] <= T:
             acc = np.clip((T - tl.accum[0]) / (tl.accum[1] - tl.accum[0]), 0, 1)
@@ -506,53 +535,53 @@ class FilmRenderer:
     def _experiment_overlays(self, img, T, seg, state):
         f, tl, d, u = self.f, self.tl, self.d, self.u
         W, H = f.size
+        P = f.portrait
         nums = d.numbers
         white = (236, 239, 246)
         al = window(T, seg.start, seg.end, 0.6)
         if al <= 0:
             return
-        mx = int(0.06 * W) if not f.portrait else int(0.075 * W)
-        my = int(0.07 * H) if not f.portrait else int(0.05 * H)
+        mx = int(0.06 * W) if not P else int(0.075 * W)
+        my = int(0.07 * H) if not P else int(0.035 * H)
+        rx = W - mx
         title = {"A_sugar": "EXPERIMENT A  ·  SUGAR", "B_bitter": "EXPERIMENT B  ·  BITTER",
                  "C_sugar_bitter": "EXPERIMENT C  ·  SUGAR + BITTER"}[seg.key]
         stim = {"A_sugar": f"{nums['sugar_n']} sugar-sensing taste neurons stimulated at {nums['rate_hz']:.0f} Hz",
                 "B_bitter": f"{nums['bitter_n']} bitter-sensing taste neurons stimulated at {nums['rate_hz']:.0f} Hz",
                 "C_sugar_bitter": f"{nums['sugar_n']} sugar + {nums['bitter_n']} bitter taste neurons, each at {nums['rate_hz']:.0f} Hz"}[seg.key]
         s1, s2, s3 = int(34 * u), int(40 * u), int(32 * u)
-        composite(img, text_rgba(title, "medium", s1, white, tracking=0.16), mx, my, 0.85 * al)
-        composite(img, text_rgba(stim, "regular", s2, white), mx, my + int(1.9 * s1), 0.75 * al)
-        composite(img, text_rgba("Simulation on the FlyWire connectome, release 783", "regular", s3, white),
-                  mx, my + int(1.9 * s1 + 1.5 * s2), 0.5 * al)
-        # colour legend
-        ly = my + int(1.9 * s1 + 1.5 * s2 + 2.2 * s3)
+        y = my
+        composite(img, text_rgba(title, "medium", s1, white, tracking=0.16), mx, y, 0.85 * al)
+        y += int(1.9 * s1)
+        for line in wrap(stim, "regular", s2, (W - 2 * mx) if P else int(0.55 * W)):
+            composite(img, text_rgba(line, "regular", s2, white), mx, y, 0.75 * al)
+            y += int(1.4 * s2)
+        composite(img, text_rgba("Simulation on the FlyWire connectome, release 783", "regular", s3, white), mx, y, 0.5 * al)
+        y += int(2.1 * s3)
         items = [("excitatory", "excitatory"), ("inhibitory", "inhibitory"), ("other", "other transmitter")]
         if seg.key in ("A_sugar", "C_sugar_bitter"):
             items.append(("sugar", "sugar input"))
         if seg.key in ("B_bitter", "C_sugar_bitter"):
             items.append(("bitter", "bitter input"))
-        x = mx
-        ls = int(30 * u)
+        x, ls = mx, int(30 * u)
         for ck, label in items:
             dot = dot_rgba(max(2, int(8 * u)), hex_rgb(PALETTE[ck]))
-            composite(img, dot, x, ly + int(ls * 0.45) - dot.shape[0] // 2 + 2, 0.9 * al)
-            x += dot.shape[1] + int(8 * u)
             t = text_rgba(label, "regular", ls, white)
-            composite(img, t, x, ly, 0.6 * al)
+            if P and x + dot.shape[1] + t.shape[1] > W - mx:
+                x, y = mx, y + int(ls * 1.6)
+            composite(img, dot, x, y + int(ls * 0.45) - dot.shape[0] // 2 + 2, 0.9 * al)
+            x += dot.shape[1] + int(8 * u)
+            composite(img, t, x, y, 0.6 * al)
             x += t.shape[1] + int(26 * u)
-            if f.portrait and x > W * 0.72:
-                x, ly = mx, ly + int(ls * 1.6)
-        # brain clock (top right)
+        # brain clock: top right (landscape) or the lower third (portrait)
         t_ms = state.get("t_ms", -1)
         clock = "0" if t_ms < 0 else f"{min(t_ms, 1000.0):.0f}"
         big = text_rgba(f"{clock} ms", "light", int(88 * u), white)
-        rx = W - mx
-        composite(img, big, rx - big.shape[1], my - int(12 * u), 0.9 * al)
         sub = text_rgba(f"brain time  ·  slowed {self.f.slow:.0f}×", "regular", int(30 * u), white)
-        composite(img, sub, rx - sub.shape[1], my - int(12 * u) + big.shape[0], 0.55 * al)
-        # MN9 readout (bottom right) and fly inset
-        by = int(H - (0.085 * H if not f.portrait else 0.075 * H))
-        if f.portrait:
-            by = int(H * 0.60)
+        cy = my - int(12 * u) if not P else int(0.635 * H)
+        composite(img, big, rx - big.shape[1], cy, 0.9 * al)
+        composite(img, sub, rx - sub.shape[1], cy + big.shape[0], 0.55 * al)
+        # MN9 readout
         if t_ms <= 1000.0:
             r = d.mn9_rate(seg.key, max(min(t_ms, 1000.0), 0.0)) if t_ms >= 0 else [0.0, 0.0]
             label = "MN9 FIRING RATE  (LAST 100 MS)"
@@ -563,28 +592,39 @@ class FilmRenderer:
             vals = "   ".join(f"{s} {c} spikes" for s, c in zip(d.mn9_sides, cnt))
         v_img = text_rgba(vals, "regular", int(54 * u), white)
         l_img = text_rgba(label, "medium", int(27 * u), white, tracking=0.14)
+        if not P:
+            by = int(H - 0.085 * H)                                   # baseline of the values
+        else:
+            by = cy + big.shape[0] + sub.shape[0] + int(40 * u) + l_img.shape[0] + int(6 * u) + v_img.shape[0]
         composite(img, v_img, rx - v_img.shape[1], by - v_img.shape[0], 0.9 * al)
         composite(img, l_img, rx - l_img.shape[1], by - v_img.shape[0] - l_img.shape[0] - int(6 * u), 0.6 * al)
-        # comparison at the end of experiment C
+        # comparison at the end of experiment C (MN9 spikes of the two film trials)
         if seg.key == "C_sugar_bitter" and T > seg.t1 - 3.0:
             ca = ramp(T, seg.t1 - 3.0, seg.t1 - 2.0) * al
             a_n, c_n = nums["A_sugar"]["mn9_spikes_trial"], nums["C_sugar_bitter"]["mn9_spikes_trial"]
-            txt = "MN9, 1 s trials:  sugar " + " / ".join(str(x) for x in a_n) + " spikes  →  sugar + bitter " + \
-                  " / ".join(str(x) for x in c_n) + " spikes  (left / right)"
-            if f.portrait:
-                txt = "MN9: sugar " + "/".join(str(x) for x in a_n) + " → sugar+bitter " + "/".join(str(x) for x in c_n) + " spikes"
-            ci = text_rgba(txt, "regular", int(34 * u), white)
-            composite(img, ci, rx - ci.shape[1], by + int(14 * u), 0.8 * ca)
+            if not P:
+                lines = ["MN9, 1 s trials:  sugar " + " / ".join(str(x) for x in a_n) + " spikes  →  sugar + bitter "
+                         + " / ".join(str(x) for x in c_n) + " spikes  (left / right)"]
+            else:
+                lines = ["MN9 spikes, 1 s trials (left / right):",
+                         "sugar " + " / ".join(str(x) for x in a_n) + "  →  sugar + bitter " + " / ".join(str(x) for x in c_n)]
+            yy = by + int(14 * u)
+            for line in lines:
+                ci = text_rgba(line, "regular", int(34 * u), white)
+                composite(img, ci, rx - ci.shape[1], yy, 0.8 * ca)
+                yy += int(34 * u * 1.45)
         # fly inset: an illustration driven by the simulated MN9 rate
-        if seg.key and t_ms >= -500:
+        if t_ms >= -500:
             rr = d.mn9_rate(seg.key, max(min(t_ms, 1000.0), 0.0), window_ms=50.0) if t_ms >= 0 else [0.0, 0.0]
             if t_ms > 1000.0:
                 rr = [x * (1.0 - ramp(T, seg.t1, seg.t1 + 1.0)) for x in rr]
             ext = float(np.clip(np.mean(rr) / 60.0, 0.0, 1.0))
-            size = int(380 * u) if not f.portrait else int(300 * u)
+            size = int(380 * u) if not P else int(330 * u)
             fly = fly_rgba(size, int(round(ext * 100)))
-            fx = rx - size
-            fy = by - v_img.shape[0] - l_img.shape[0] - int(30 * u) - size
+            if not P:
+                fx, fy = rx - size, by - v_img.shape[0] - l_img.shape[0] - int(30 * u) - size
+            else:
+                fx, fy = mx - int(20 * u), int(0.625 * H)
             composite(img, fly, fx, fy, 0.75 * al)
             cap = text_rgba("illustration", "regular", int(26 * u), white)
             composite(img, cap, fx + size - cap.shape[1], fy + size - int(10 * u), 0.45 * al)
@@ -613,9 +653,10 @@ class FilmRenderer:
         c0, c1 = tl.credits
         mx = int(0.06 * W) if not f.portrait else int(0.075 * W)
         lines = CREDITS_PORTRAIT if f.portrait else CREDITS
-        al = window(T, c0 + 0.8, c1 - 0.3, 1.0) * (1 - ramp(T, c1 - 5.6, c1 - 4.6))
+        fin_dur = 5.2 if not f.portrait else 3.0               # seconds for the final line
+        al = window(T, c0 + 0.6, c1 - fin_dur - 0.2, 0.8)
         size = int(34 * u)
-        y = int(0.16 * H) if not f.portrait else int(0.5 * H)
+        y = int(0.16 * H) if not f.portrait else int(0.64 * H)
         for weight, text in lines:
             if text == "":
                 y += int(size * 0.8)
@@ -624,12 +665,12 @@ class FilmRenderer:
             t = text_rgba(text, weight, s, white, tracking=0.12 if weight == "medium" else 0.0)
             composite(img, t, mx, y, (0.85 if weight == "medium" else 0.7) * al)
             y += int(s * 1.55)
-        fin = window(T, c1 - 5.2, c1 - 0.25, 1.2)
+        fin = window(T, c1 - fin_dur, c1 - 0.25, 1.0 if f.portrait else 1.2)
         final = text_rgba("A simulation built on the real wiring of a fruit fly's brain.", "light",
                           int((52 if not f.portrait else 40) * u), white)
         if f.portrait:
             final_lines = ["A simulation built on the real", "wiring of a fruit fly's brain."]
-            yy = int(H * 0.44)
+            yy = int(H * 0.70)
             for i, ln in enumerate(final_lines):
                 t = text_rgba(ln, "light", int(46 * u), white)
                 composite(img, t, (W - t.shape[1]) // 2, yy + i * int(62 * u), 0.95 * fin)
@@ -727,6 +768,17 @@ def render_film(fmt_name: str, start: float | None = None, end: float | None = N
     return out
 
 
+def downscale_1080p(src: Path = OUT / "a_thought.mp4", dst: Path = OUT / "a_thought_1080p.mp4"):
+    """1080p version of the master: Lanczos downscale, same colour tags."""
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(src),
+                    "-vf", "scale=1920:1080:flags=lanczos+accurate_rnd:in_color_matrix=bt709:out_color_matrix=bt709",
+                    "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-profile:v", "high", "-pix_fmt", "yuv420p",
+                    "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv",
+                    "-g", "120", "-movflags", "+faststart", str(dst)], check=True)
+    log(f"wrote {dst}")
+    return dst
+
+
 def still(T: float, fmt_name: str = "preview", path: Path | None = None):
     fr = FilmRenderer(fmt_name)
     img = fr.frame(int(round(T * fr.f.fps)))
@@ -738,7 +790,7 @@ def still(T: float, fmt_name: str = "preview", path: Path | None = None):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("mode", choices=["preview", "master", "vertical", "vertical_preview", "still", "poster"])
+    ap.add_argument("mode", choices=["preview", "master", "vertical", "vertical_preview", "still", "poster", "1080p"])
     ap.add_argument("time", nargs="?", type=float)
     ap.add_argument("--format", default="preview")
     ap.add_argument("--start", type=float)
@@ -751,5 +803,7 @@ if __name__ == "__main__":
         from .poster import make_poster
 
         make_poster()
+    elif a.mode == "1080p":
+        downscale_1080p()
     else:
         render_film(a.mode, a.start, a.end, out=a.out)

@@ -205,9 +205,14 @@ def ours_sugar_trials(n_trials=90) -> dict:
     pos = {r: i for i, r in enumerate(nd.root_id)}
     sugar = np.array([pos[r] for r in g["paper_lists_630"]["sugar_right_in_783"]])
     mn9 = [pos[r] for r in g["mn9"]["root_ids"]]
-    counts, totals = run_trials(net, [Stimulus(sugar, 150.0)], n_trials, watch=mn9)
-    return dict(seeds=list(range(n_trials)), mn9_left=counts[:, 0].tolist(), mn9_right=counts[:, 1].tolist(),
-                total_spikes=totals.tolist())
+    full = np.zeros((n_trials, net.n), np.int32)
+    for k in range(n_trials):
+        tr = simulate(net, [Stimulus(sugar, 150.0)], Params(), seed=k)
+        full[k] = np.bincount(tr.neurons, minlength=net.n)
+    cols = np.flatnonzero(full.sum(0))
+    np.savez_compressed(RESULTS / "validation_counts_ours.npz", neurons=cols, counts=full[:, cols], seeds=np.arange(n_trials))
+    return dict(seeds=list(range(n_trials)), mn9_left=full[:, mn9[0]].tolist(), mn9_right=full[:, mn9[1]].tolist(),
+                total_spikes=full.sum(1).tolist(), counts_file="results/validation_counts_ours.npz")
 
 
 def brian2_results() -> dict:
@@ -227,7 +232,12 @@ def brian2_results() -> dict:
         keys = sorted(df.key.unique())
         per = per.reindex(index=keys, columns=mn9_ids, fill_value=0)
         totals = df.groupby("key").size().reindex(keys)
+        nd = load_neurons()
+        pos = pd.Series(np.arange(len(nd)), index=nd.root_id)
+        B = np.zeros((len(keys), len(nd)), np.int32)
+        np.add.at(B, (df.key.map({k: i for i, k in enumerate(keys)}).to_numpy(), pos.reindex(df.flywire_id).to_numpy()), 1)
         out["full_network_poisson"] = dict(
+            _count_matrix=B,
             source="authors' model.py run_exp(), unmodified, Brian2 2.5.1, cython target; v783, paper sugar GRNs, 150 Hz",
             files=[f.stem for f in sorted((RESULTS / "brian2").glob("b2_783_paper_sugar_150Hz_*tr.parquet"))],
             trials=len(keys),
@@ -348,12 +358,35 @@ def main(rerun: bool = False) -> dict:
                            diff_in_se=float((ours.mean() - ref.mean()) / np.sqrt(ours.var(ddof=1) / len(ours) + ref.var(ddof=1) / len(ref))))
         tot = np.array(mine["total_spikes"], float)
         comp["spikes_per_trial"] = dict(brian2=fn["spikes_per_trial"], ours=summary(tot))
+        # every neuron: per-trial spike counts, Welch t-test, Bonferroni over all neurons active in either
+        oc = np.load(RESULTS / "validation_counts_ours.npz")
+        nd = load_neurons()
+        n_all = len(nd)
+        O = np.zeros((oc["counts"].shape[0], n_all), np.int32)
+        O[:, oc["neurons"]] = oc["counts"]
+        B = fn.pop("_count_matrix")
+        act = np.flatnonzero((O.sum(0) + B.sum(0)) > 0)
+        t, pv = stats.ttest_ind(O[:, act].astype(float), B[:, act].astype(float), equal_var=False)
+        pv = np.where(np.isnan(pv), 1.0, pv)
+        order = np.argsort(pv)[:5]
+        fn["all_neurons"] = dict(
+            active_neurons=int(len(act)), bonferroni_threshold=0.05 / len(act),
+            significant_after_bonferroni=int((pv < 0.05 / len(act)).sum()),
+            p_below_0_001=int((pv < 1e-3).sum()), expected_by_chance_at_0_001=float(len(act) * 1e-3),
+            smallest_p=[dict(root_id=int(nd.root_id[act[j]]), cell_type=str(nd.cell_type[act[j]]), side=str(nd.side[act[j]]),
+                             brian2_hz=float(B[:, act[j]].mean()), ours_hz=float(O[:, act[j]].mean()), p=float(pv[j])) for j in order],
+            grn_rate_hz=dict(brian2=float(B[:, np.array([nd.index[nd.root_id == r][0] for r in load_groups()["paper_lists_630"]["sugar_right_in_783"]])].mean()),
+                             ours=float(O[:, np.array([nd.index[nd.root_id == r][0] for r in load_groups()["paper_lists_630"]["sugar_right_in_783"]])].mean())),
+        )
         fn["comparison_with_this_model"] = comp
-        b2_ok = all(abs(v["diff_in_se"]) < 3.0 for k, v in comp.items() if k in mn9_side)
+        b2_ok = fn["all_neurons"]["significant_after_bonferroni"] == 0
     for name in ("micro_equivalence", "fullnet_equivalence"):
         if name in b2:
             b2_ok = b2_ok and bool(b2[name].get("identical"))
-    cross["b_brian2"] = dict(passed=bool(b2_ok and "fullnet_equivalence" in b2), **b2)
+    cross["b_brian2"] = dict(passed=bool(b2_ok and "fullnet_equivalence" in b2),
+                             criterion="spike trains identical to Brian2 under identical input (small networks and the full "
+                                       "v783 network); with Poisson input, no neuron's mean rate differs between 90 Brian2 and "
+                                       "90 trials of this model after Bonferroni correction over all active neurons", **b2)
     fpk = cache["flypoke"]
     fm = fpk["this_model_flypoke_settings"]
     qual = fm["sugar"]["mn9_right"] > 30 and fm["bitter"]["mn9_right"] <= 1 and fm["sugar + bitter"]["mn9_right"] < fm["sugar"]["mn9_right"]

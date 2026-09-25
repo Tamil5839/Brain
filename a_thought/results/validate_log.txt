@@ -1,1 +1,14 @@
 running ours_sugar_90 ...
+
+VALIDATION (section 5)
+  [PASS] 1_data_integrity
+  [PASS] 2_sugar_drives_mn9
+  [PASS] 3_bitter_does_not_drive_mn9
+  [PASS] 4_bitter_suppresses_sugar
+  [PASS] 5_baseline_silent
+  [PASS] 6_determinism
+  [PASS] cross-check a_published_outputs_630
+  [PASS] cross-check b_brian2
+  [PASS] cross-check c_flypoke
+  MN9 (Hz, mean of 30 trials): left sugar 57.4 / sugar+bitter 14.1, right sugar 79.7 / sugar+bitter 5.5
+  ALL PASSED: True

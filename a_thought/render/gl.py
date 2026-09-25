@@ -139,9 +139,11 @@ in vec3 v_pos;
 in vec3 v_nrm;
 out vec4 f_color;
 void main() {
-    vec3 n = normalize(v_nrm);
+    float ln = length(v_nrm);
+    if (ln < 1e-6) discard;
+    vec3 n = v_nrm / ln;
     vec3 v = normalize(u_eye - v_pos);
-    float facing = abs(dot(n, v));
+    float facing = clamp(abs(dot(n, v)), 0.0, 1.0);   // rounding can push |n.v| above 1; pow() of a negative base is NaN
     float rim = pow(1.0 - facing, u_power);
     f_color = vec4(u_color * u_opacity * (rim + u_fill), 1.0);
 }
@@ -160,21 +162,25 @@ uniform sampler2D u_src;
 uniform vec2 u_texel;        // 1 / source size
 in vec2 v_uv;
 out vec4 f_color;
+vec3 tex(vec2 uv) {  // never let a non-finite value into the bloom chain
+    vec3 c = texture(u_src, uv).rgb;
+    return (any(isnan(c)) || any(isinf(c))) ? vec3(0.0) : c;
+}
 void main() {   // 13-tap filter (Jimenez 2014, "Next generation post processing in Call of Duty")
     vec2 t = u_texel;
-    vec3 a = texture(u_src, v_uv + t * vec2(-2, 2)).rgb;
-    vec3 b = texture(u_src, v_uv + t * vec2( 0, 2)).rgb;
-    vec3 c = texture(u_src, v_uv + t * vec2( 2, 2)).rgb;
-    vec3 d = texture(u_src, v_uv + t * vec2(-2, 0)).rgb;
-    vec3 e = texture(u_src, v_uv).rgb;
-    vec3 f = texture(u_src, v_uv + t * vec2( 2, 0)).rgb;
-    vec3 g = texture(u_src, v_uv + t * vec2(-2,-2)).rgb;
-    vec3 h = texture(u_src, v_uv + t * vec2( 0,-2)).rgb;
-    vec3 i = texture(u_src, v_uv + t * vec2( 2,-2)).rgb;
-    vec3 j = texture(u_src, v_uv + t * vec2(-1, 1)).rgb;
-    vec3 k = texture(u_src, v_uv + t * vec2( 1, 1)).rgb;
-    vec3 l = texture(u_src, v_uv + t * vec2(-1,-1)).rgb;
-    vec3 m = texture(u_src, v_uv + t * vec2( 1,-1)).rgb;
+    vec3 a = tex(v_uv + t * vec2(-2, 2));
+    vec3 b = tex(v_uv + t * vec2( 0, 2));
+    vec3 c = tex(v_uv + t * vec2( 2, 2));
+    vec3 d = tex(v_uv + t * vec2(-2, 0));
+    vec3 e = tex(v_uv);
+    vec3 f = tex(v_uv + t * vec2( 2, 0));
+    vec3 g = tex(v_uv + t * vec2(-2,-2));
+    vec3 h = tex(v_uv + t * vec2( 0,-2));
+    vec3 i = tex(v_uv + t * vec2( 2,-2));
+    vec3 j = tex(v_uv + t * vec2(-1, 1));
+    vec3 k = tex(v_uv + t * vec2( 1, 1));
+    vec3 l = tex(v_uv + t * vec2(-1,-1));
+    vec3 m = tex(v_uv + t * vec2( 1,-1));
     vec3 col = e * 0.125 + (a + c + g + i) * 0.03125 + (b + d + f + h) * 0.0625 + (j + k + l + m) * 0.125;
     f_color = vec4(col, 1.0);
 }
@@ -219,7 +225,9 @@ float hash(vec2 p) {
     return fract((p3.x + p3.y) * p3.z);
 }
 void main() {
-    vec3 hdr = texture(u_hdr, v_uv).rgb + u_bloom_strength * texture(u_bloom, v_uv).rgb;
+    vec3 base = texture(u_hdr, v_uv).rgb;
+    if (any(isnan(base)) || any(isinf(base))) base = vec3(0.0);
+    vec3 hdr = base + u_bloom_strength * texture(u_bloom, v_uv).rgb;
     vec3 c = aces(hdr * u_exposure) * u_fade;
     c = pow(c, vec3(1.0 / 2.2));
     c = u_bg + c * (1.0 - u_bg);
