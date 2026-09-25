@@ -42,7 +42,7 @@ RESAMPLE_NM = 1500.0
 
 
 # ------------------------------------------------------------------ selection
-def select(condition: str = "A_sugar") -> dict:
+def select(condition: str = "A_sugar", save: bool = True) -> dict:
     exp = load_json(RESULTS / "experiments.json")
     c = exp["conditions"][condition]
     rep = c["representative_trial"]
@@ -93,7 +93,8 @@ def select(condition: str = "A_sugar") -> dict:
                   score="spikes in the trial x excitatory synapses onto the next level"),
         neurons=rows, arcs=[dict(pre=a, post=b, synapses=w) for a, b, w in arcs],
     )
-    save_json(PATHWAY_JSON, out)
+    if save:
+        save_json(PATHWAY_JSON, out)
     return out
 
 
