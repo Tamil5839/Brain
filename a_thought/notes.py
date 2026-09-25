@@ -56,19 +56,25 @@ def main():
 
     # ------------------------------------------------------------------ deliverables
     w("## 1. Deliverables\n")
-    w("| file | content | video |\n|---|---|---|")
-    for name, what in [("a_thought.mp4", "master, ~2:36"), ("a_thought_1080p.mp4", "1080p version of the master"),
-                       ("a_thought_vertical.mp4", "vertical cut, ~60 s"), ("poster.png", "long exposure of all spikes")]:
+    w("| file | content | video | in repository |\n|---|---|---|---|")
+    for name, what, in_repo in [("a_thought.mp4", "4K master, 2:36", "no (size; regenerate, see below)"),
+                                ("a_thought_1080p.mp4", "1080p version of the master", "yes"),
+                                ("a_thought_vertical.mp4", "vertical cut, ~60 s", "yes"),
+                                ("poster.png", "long exposure of all spikes", "yes")]:
         info = ffprobe(OUT / name) if name.endswith(".mp4") else None
         if name.endswith(".png"):
             exists = (OUT / name).exists()
-            w(f"| `out/{name}` | {what} | {'3840×2160 PNG' if exists else 'not rendered yet'} |")
+            w(f"| `out/{name}` | {what} | {'3840×2160 PNG' if exists else 'not rendered yet'} | {in_repo} |")
         elif info:
             w(f"| `out/{name}` | {what} | {info['w']}×{info['h']}, {info['fps']} fps, {info['dur']:.2f} s, "
-              f"{info['codec']}, {info['pix']}, {info['mb']:.0f} MB ({info['mbps']:.1f} Mb/s) |")
+              f"{info['codec']}, {info['pix']}, {info['mb']:.0f} MB ({info['mbps']:.1f} Mb/s) | {in_repo} |")
         else:
-            w(f"| `out/{name}` | {what} | not rendered yet |")
+            w(f"| `out/{name}` | {what} | not rendered yet | {in_repo} |")
     w("")
+    w("The 4K master is too large for a GitHub file (100 MB limit), so it is not stored in the repository. It is "
+      "reproduced exactly from the committed spike files and code with `python -m render.film master` "
+      "(about 1.5 hours on 4 CPU cores with Mesa llvmpipe; faster with a GPU); `python -m render.film 1080p` "
+      "then derives the 1080p version from it.\n")
 
     # ------------------------------------------------------------------ sources
     w("## 2. Data and code sources\n")

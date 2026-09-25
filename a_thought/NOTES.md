@@ -6,12 +6,14 @@ On-screen wording used throughout: *"A simulation built on the real wiring of a 
 
 ## 1. Deliverables
 
-| file | content | video |
-|---|---|---|
-| `out/a_thought.mp4` | master, ~2:36 | not rendered yet |
-| `out/a_thought_1080p.mp4` | 1080p version of the master | not rendered yet |
-| `out/a_thought_vertical.mp4` | vertical cut, ~60 s | 1080×1920, 60/1 fps, 62.00 s, h264 High, yuv420p, 66 MB (8.5 Mb/s) |
-| `out/poster.png` | long exposure of all spikes | 3840×2160 PNG |
+| file | content | video | in repository |
+|---|---|---|---|
+| `out/a_thought.mp4` | 4K master, 2:36 | not rendered yet | no (size; regenerate, see below) |
+| `out/a_thought_1080p.mp4` | 1080p version of the master | not rendered yet | yes |
+| `out/a_thought_vertical.mp4` | vertical cut, ~60 s | 1080×1920, 60/1 fps, 62.00 s, h264 High, yuv420p, 66 MB (8.5 Mb/s) | yes |
+| `out/poster.png` | long exposure of all spikes | 3840×2160 PNG | yes |
+
+The 4K master is too large for a GitHub file (100 MB limit), so it is not stored in the repository. It is reproduced exactly from the committed spike files and code with `python -m render.film master` (about 1.5 hours on 4 CPU cores with Mesa llvmpipe; faster with a GPU); `python -m render.film 1080p` then derives the 1080p version from it.
 
 ## 2. Data and code sources
 
